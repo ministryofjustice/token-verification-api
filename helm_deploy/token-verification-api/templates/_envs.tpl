@@ -19,7 +19,7 @@ env:
         name: {{ template "app.name" . }}
         key: APPINSIGHTS_INSTRUMENTATIONKEY
 
-  - name: SPRING_DATASOURCE_USERNAME
+  - name: SPRING_REDIS
     valueFrom:
       secretKeyRef:
         name: dps-rds-instance-output
