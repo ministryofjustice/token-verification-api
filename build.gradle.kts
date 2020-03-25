@@ -58,9 +58,7 @@ tasks.withType<DependencyUpdatesTask> {
 group = "uk.gov.justice.digital.hmpps"
 
 val todaysDate: String = LocalDate.now().format(ISO_DATE)
-version = if (System.getenv().contains("CI")) {
-  "${todaysDate}.${System.getenv("CIRCLE_BUILD_NUM")}.${System.getenv("CIRCLE_SHA1").substring(0,7)}"
-} else todaysDate
+version = if (System.getenv().contains("BUILD_NUMBER")) System.getenv("BUILD_NUMBER") else todaysDate
 
 springBoot {
   buildInfo {
@@ -69,7 +67,6 @@ springBoot {
       additional = mapOf(
           "by" to System.getProperty("user.name"),
           "operatingSystem" to "${System.getProperty("os.name")} (${System.getProperty("os.version")})",
-          "continuousIntegration" to System.getenv().containsKey("CI"),
           "machine" to InetAddress.getLocalHost().hostName
       )
     }
