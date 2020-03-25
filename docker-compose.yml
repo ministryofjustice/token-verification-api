@@ -1,0 +1,27 @@
+version: '3.1'
+services:
+  token-verification-api:
+    image: quay.io/hmpps/token-verification-api:latest
+    networks:
+      - hmpps
+    container_name: token-verification-api
+    depends_on:
+      - token-verification-api-db
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+    environment:
+      - SPRING_REDIS_HOST=token-verification-api-db
+
+  token-verification-api-db:
+    image: redis
+    networks:
+      - hmpps
+    container_name: token-verification-api-db
+    restart: always
+    ports:
+      - '6379:6379'
+
+networks:
+  hmpps:
