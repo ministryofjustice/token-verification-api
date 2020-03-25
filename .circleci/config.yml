@@ -56,6 +56,8 @@ workflows:
       - dps/build_docker:
           name: build_docker
           image_name: << pipeline.parameters.image_name >>
+          requires:
+            - build
           filters:
             branches:
               only:
@@ -78,7 +80,7 @@ workflows:
           name: deploy_preprod
           env: "preprod"
           app_name: << pipeline.parameters.app_name >>
-          context: notm-preprod
+          context: token-verification-api-preprod
           requires:
             - request-preprod-approval
       - request-prod-approval:
@@ -90,7 +92,7 @@ workflows:
           env: "prod"
           app_name: << pipeline.parameters.app_name >>
           slack_notification: true
-          context: notm-prod
+          context: token-verification-api-prod
           requires:
             - request-prod-approval
 
