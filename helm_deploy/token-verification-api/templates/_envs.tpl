@@ -19,27 +19,15 @@ env:
         name: {{ template "app.name" . }}
         key: APPINSIGHTS_INSTRUMENTATIONKEY
 
-  - name: SPRING_REDIS
+  - name: SPRING_REDIS_HOST
     valueFrom:
       secretKeyRef:
-        name: dps-rds-instance-output
-        key: database_username
+        name: tva-elasticache-redis
+        key: primary_endpoint_address
 
-  - name: SPRING_DATASOURCE_PASSWORD
+  - name: SPRING_REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: dps-rds-instance-output
-        key: database_password
-
-  - name: DATABASE_NAME
-    valueFrom:
-      secretKeyRef:
-        name: dps-rds-instance-output
-        key: database_name
-
-  - name: DATABASE_ENDPOINT
-    valueFrom:
-      secretKeyRef:
-        name: dps-rds-instance-output
-        key: rds_instance_endpoint
+        name: tva-elasticache-redis
+        key: auth_token
 {{- end -}}
