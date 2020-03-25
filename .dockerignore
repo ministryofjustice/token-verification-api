@@ -1,7 +1,6 @@
 .circleci
 .dockerignore
 .gitignore
-.gradle
 .idea
 build
 docker-compose.yml
