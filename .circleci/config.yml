@@ -51,7 +51,7 @@ jobs:
         type: string
       publish:
         type: boolean
-        default: false
+        default: true
     steps:
       - checkout
       - attach_workspace:
@@ -98,6 +98,10 @@ workflows:
           image_name: << pipeline.parameters.image_name >>
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - master
       - dps/deploy_env:
           name: deploy_dev
           env: "dev"
