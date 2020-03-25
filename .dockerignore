@@ -1,6 +1,5 @@
 .circleci
 .dockerignore
-.git
 .gitignore
 .gradle
 .idea
