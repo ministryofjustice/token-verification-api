@@ -30,4 +30,7 @@ env:
       secretKeyRef:
         name: tva-elasticache-redis
         key: auth_token
+
+  - name: SPRING_REDIS_SSL
+    value: "true"
 {{- end -}}
