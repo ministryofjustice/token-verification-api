@@ -73,10 +73,6 @@ springBoot {
   }
 }
 
-configurations {
-  implementation { exclude(mapOf("module" to "tomcat-jdbc")) }
-}
-
 dependencyManagement {
   imports { mavenBom(SpringBootPlugin.BOM_COORDINATES) }
 }
@@ -95,14 +91,12 @@ dependencies {
   implementation("io.springfox:springfox-swagger-ui:2.9.2")
   implementation("io.springfox:springfox-bean-validators:2.9.2")
 
-  runtimeOnly("org.flywaydb:flyway-core:6.3.1")
-
   implementation("net.logstash.logback:logstash-logback-encoder:6.3")
-  implementation("com.microsoft.azure:applicationinsights-spring-boot-starter:2.5.1")
-  implementation("com.microsoft.azure:applicationinsights-logging-logback:2.5.1")
+  implementation("com.microsoft.azure:applicationinsights-spring-boot-starter:2.6.0")
+  implementation("com.microsoft.azure:applicationinsights-logging-logback:2.6.0")
   implementation("com.github.timpeeters:spring-boot-graceful-shutdown:2.2.1")
 
-  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.3")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:28.2-jre")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -118,7 +112,7 @@ tasks {
 
   val agentDeps by configurations.register("agentDeps") {
     dependencies {
-      "agentDeps"("com.microsoft.azure:applicationinsights-agent:2.5.1") {
+      "agentDeps"("com.microsoft.azure:applicationinsights-agent:2.6.0") {
         isTransitive = false
       }
     }
