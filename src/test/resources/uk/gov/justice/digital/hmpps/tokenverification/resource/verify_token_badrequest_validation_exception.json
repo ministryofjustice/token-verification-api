@@ -1,0 +1,7 @@
+{
+  "status": 400,
+  "errorCode": null,
+  "userMessage": "Validation exception: Unable to find subject from token",
+  "developerMessage": "Unable to find subject from token",
+  "moreInfo": null
+}
