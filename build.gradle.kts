@@ -11,9 +11,9 @@ plugins {
   kotlin("jvm") version "1.3.71"
   kotlin("plugin.spring") version "1.3.71"
   kotlin("plugin.jpa") version "1.3.71"
-  id("org.springframework.boot") version "2.2.5.RELEASE"
+  id("org.springframework.boot") version "2.2.6.RELEASE"
   id("io.spring.dependency-management") version "1.0.9.RELEASE"
-  id("org.owasp.dependencycheck") version "5.3.1"
+  id("org.owasp.dependencycheck") version "5.3.2.1"
   id("com.github.ben-manes.versions") version "0.28.0"
   id("com.gorylenko.gradle-git-properties") version "2.2.2"
   id("se.patrikerdes.use-latest-versions") version "0.2.13"
@@ -98,6 +98,7 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:28.2-jre")
+  implementation("com.nimbusds:nimbus-jose-jwt:8.11")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude("org.junit.vintage", "junit-vintage-engine")
@@ -105,6 +106,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-webflux")
   testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
   testImplementation("it.ozimov:embedded-redis:0.7.2")
+  testImplementation("io.jsonwebtoken:jjwt:0.9.1")
 }
 
 tasks {

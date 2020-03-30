@@ -8,15 +8,15 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TokenRepository : CrudRepository<Token, String> {
-  fun findByAuthId(authId: String): List<Token>
-  fun findByUsername(username: String): List<Token>
+  fun findByAuthJwtId(authJwtId: String): List<Token>
+  fun findBySubject(subject: String): List<Token>
 }
 
-@RedisHash(timeToLive = 86400) // expire all tokens after a day
+@RedisHash(value = "token", timeToLive = 86400) // expire all tokens after a day
 data class Token(
     @Id
-    val tokenId: String,
+    val jwtId: String,
     @Indexed
-    val authId: String,
+    val authJwtId: String,
     @Indexed
-    val username: String)
+    val subject: String)

@@ -9,7 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-abstract class IntegrationTest : RedisTest() {
+abstract class IntegrationTest {
   @Suppress("unused")
   @Autowired
   lateinit var webTestClient: WebTestClient
