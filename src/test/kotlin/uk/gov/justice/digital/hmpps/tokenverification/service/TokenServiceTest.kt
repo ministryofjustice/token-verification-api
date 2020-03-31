@@ -9,26 +9,27 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
+import org.springframework.security.oauth2.jwt.BadJwtException
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
-import java.text.ParseException
+import java.time.Duration
 import java.util.*
 import javax.validation.ValidationException
 
 @Suppress("ClassName")
 class TokenServiceTest {
   private val tokenRepository: TokenRepository = mock()
-  private val tokenService = TokenService(tokenRepository)
-
   private val jwtHelper = JwtAuthHelper()
+  private val tokenService = TokenService(tokenRepository, jwtHelper.jwtDecoder())
 
   @Nested
   inner class verifyToken {
     @Test
     fun `verify token invalid token`() {
       assertThatThrownBy { tokenService.verifyToken("not a jwt") }
-          .isInstanceOf(ParseException::class.java)
+          .isInstanceOf(BadJwtException::class.java)
+          .hasMessageContaining("Invalid JWT serialization")
     }
 
     @Test
@@ -41,7 +42,7 @@ class TokenServiceTest {
 
     @Test
     fun `verify token subject blank`() {
-      val jwt = jwtHelper.createJwt(subject = "", jwtId = "jwt id")
+      val jwt = jwtHelper.createJwt(subject = "")
       assertThatThrownBy { tokenService.verifyToken(jwt) }
           .isInstanceOf(ValidationException::class.java)
           .hasMessage("Unable to find subject from token")
@@ -49,11 +50,26 @@ class TokenServiceTest {
 
     @Test
     fun `verify token not found`() {
-      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+      val jwt = jwtHelper.createJwt(subject = "bob")
       val tokenDto = tokenService.verifyToken(jwt)
       assertThat(tokenDto).isEqualTo(TokenDto(active = false))
     }
 
+    @Test
+    fun `verify token expired`() {
+      val jwt = jwtHelper.createJwt(subject = "bob", expiryTime = Duration.ofHours(-1))
+      assertThatThrownBy { tokenService.verifyToken(jwt) }
+          .isInstanceOf(BadJwtException::class.java)
+    }
+
+    @Test
+    fun `verify token signature invalid`() {
+      // creating new instance of auth helper with generate new keys
+      val jwt = JwtAuthHelper().createJwt(subject = "bob")
+      assertThatThrownBy { tokenService.verifyToken(jwt) }
+          .isInstanceOf(BadJwtException::class.java)
+          .hasMessageContaining("Signed JWT rejected")
+    }
 
     @Test
     fun `verify token`() {

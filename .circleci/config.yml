@@ -13,16 +13,16 @@ orbs:
   owasp: entur/owasp@0.0.6
 
 executors:
-  builder:
+  validator:
     docker:
       - image: circleci/openjdk:11-jdk
     environment:
-      JAVA_TOOL_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false
+      _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-XX:+UseContainerSupport
     working_directory: ~/app
 
 jobs:
-  build:
-    executor: builder
+  validate:
+    executor: validator
     steps:
       - checkout
       - restore_cache:
@@ -30,7 +30,7 @@ jobs:
             - gradle-{{ checksum "build.gradle.kts" }}
             - gradle-
       - run:
-          command: ./gradlew build
+          command: ./gradlew test
       - save_cache:
           paths:
             - ~/.gradle
@@ -49,7 +49,7 @@ workflows:
   version: 2
   build-test-and-deploy:
     jobs:
-      - build:
+      - validate:
           filters:
             tags:
               ignore: /.*/
@@ -69,7 +69,7 @@ workflows:
               only:
                 - master
           requires:
-            - build
+            - validate
             - build_docker
       - request-preprod-approval:
           type: approval
@@ -105,4 +105,4 @@ workflows:
                 - master
     jobs:
       - owasp/gradle_owasp_dependency_check:
-          executor: builder
+          executor: validator

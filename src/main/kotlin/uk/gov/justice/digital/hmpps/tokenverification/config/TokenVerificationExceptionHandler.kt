@@ -3,9 +3,9 @@ package uk.gov.justice.digital.hmpps.tokenverification.config
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.oauth2.jwt.BadJwtException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import java.text.ParseException
 import javax.validation.ValidationException
 
 
@@ -18,18 +18,18 @@ class TokenVerificationExceptionHandler {
         .status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse(
             status = HttpStatus.BAD_REQUEST,
-            userMessage = "Validation exception: ${e.message}",
+            userMessage = "Validation failure: ${e.message}",
             developerMessage = e.message))
   }
 
-  @ExceptionHandler(ParseException::class)
+  @ExceptionHandler(BadJwtException::class)
   fun handleParseException(e: Exception): ResponseEntity<ErrorResponse> {
     log.info("Parse exception: {}", e.message)
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
         .body(ErrorResponse(
             status = HttpStatus.BAD_REQUEST,
-            userMessage = "Parse exception: ${e.message}",
+            userMessage = "Bad JWT: ${e.message}",
             developerMessage = e.message))
   }
 

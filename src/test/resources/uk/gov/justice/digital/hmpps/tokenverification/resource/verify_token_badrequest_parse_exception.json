@@ -1,7 +1,7 @@
 {
   "status": 400,
   "errorCode": null,
-  "userMessage": "Parse exception: null",
-  "developerMessage": null,
+  "userMessage": "Bad JWT: An error occurred while attempting to decode the Jwt: Invalid JWT serialization: Missing dot delimiter(s)",
+  "developerMessage": "An error occurred while attempting to decode the Jwt: Invalid JWT serialization: Missing dot delimiter(s)",
   "moreInfo": null
 }
