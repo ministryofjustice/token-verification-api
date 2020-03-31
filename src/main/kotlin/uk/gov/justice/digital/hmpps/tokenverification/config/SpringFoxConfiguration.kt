@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.tokenverification
+package uk.gov.justice.digital.hmpps.tokenverification.config
 
 import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
@@ -12,6 +12,7 @@ import springfox.documentation.service.Contact
 import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import uk.gov.justice.digital.hmpps.tokenverification.TokenVerificationApplication
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.util.*

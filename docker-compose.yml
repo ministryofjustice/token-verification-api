@@ -12,7 +12,8 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
-      - SPRING_REDIS_HOST=token-verification-api-db
+      SPRING_REDIS_HOST: token-verification-api-db
+      SPRING_PROFILES_ACTIVE: dev
 
   token-verification-api-db:
     image: redis

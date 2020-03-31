@@ -8,6 +8,7 @@ import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
 import javax.validation.ValidationException
 
+
 @Service
 class TokenService(private val tokenRepository: TokenRepository) {
   fun verifyToken(jwt: String): TokenDto {
@@ -40,7 +41,7 @@ class TokenService(private val tokenRepository: TokenRepository) {
   fun revokeTokens(authJwtId: String) {
     log.info("Removing all tokens for authJwtId of {}", authJwtId)
     val tokens = tokenRepository.findByAuthJwtId(authJwtId)
-    log.debug("Deleting ${tokens.size} for auth token")
+    log.debug("Deleting {} for auth token", tokens.size)
     tokens.forEach { tokenRepository.delete(it) }
   }
 

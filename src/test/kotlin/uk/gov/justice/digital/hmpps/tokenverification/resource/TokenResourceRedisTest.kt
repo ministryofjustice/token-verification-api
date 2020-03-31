@@ -2,17 +2,12 @@ package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import uk.gov.justice.digital.hmpps.tokenverification.service.JwtAuthHelper
-import uk.gov.justice.digital.hmpps.tokenverification.service.JwtAuthHelper.JwtParameters
 
-@Suppress("ClassName")
 @ExtendWith(RedisExtension::class)
 class TokenResourceRedisTest : IntegrationTest() {
-  private val jwtHelper = JwtAuthHelper()
-
   @Test
   fun `workflow for token`() {
-    val jwt = jwtHelper.createJwt(JwtParameters(subject = "bob"))
+    val jwt = jwtHelper.createJwt(subject = "bob")
 
     // token shouldn't be valid before we start
     verifyToken(jwt, false)
@@ -34,11 +29,11 @@ class TokenResourceRedisTest : IntegrationTest() {
   fun `workflow for refresh token`() {
     val accessTokenId = "access_jwt_id"
 
-    val accessJwt = jwtHelper.createJwt(JwtParameters(subject = "bob", jwtId = accessTokenId))
+    val accessJwt = jwtHelper.createJwt(subject = "bob", jwtId = accessTokenId)
     // add the token for a given auth jwt id
     addToken("auth id_refresh", accessJwt)
 
-    val refreshJwt = jwtHelper.createJwt(JwtParameters(subject = "bob"))
+    val refreshJwt = jwtHelper.createJwt(subject = "bob")
     // and a refresh token for it
     addRefreshToken(accessTokenId, refreshJwt)
 
@@ -55,11 +50,11 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   @Test
   fun `revoke only revokes for auth jwt id`() {
-    val jwt = jwtHelper.createJwt(JwtParameters(subject = "bob"))
+    val jwt = jwtHelper.createJwt(subject = "bob")
     // add the token for a given auth jwt id
     addToken("auth_id_revoke", jwt)
 
-    val otherJwt = jwtHelper.createJwt(JwtParameters(subject = "bob"))
+    val otherJwt = jwtHelper.createJwt(subject = "bob")
     // add the token for a given auth jwt id
     addToken("auth_id_other", otherJwt)
 
@@ -78,6 +73,7 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   private fun verifyToken(jwt: String, found: Boolean = true) {
     webTestClient.post().uri("/token/verify")
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
         .expectStatus().isOk
@@ -86,6 +82,7 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   private fun addToken(authId: String, jwt: String) {
     webTestClient.post().uri("/token/$authId")
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
         .expectStatus().isOk
@@ -94,6 +91,7 @@ class TokenResourceRedisTest : IntegrationTest() {
   @Suppress("SameParameterValue")
   private fun addRefreshToken(accessJwtId: String, jwt: String) {
     webTestClient.post().uri("/token/refresh/$accessJwtId")
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
         .expectStatus().isOk
@@ -101,6 +99,7 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   private fun revokeTokens(authId: String) {
     webTestClient.delete().uri("/token/$authId")
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .exchange()
         .expectStatus().isOk
   }

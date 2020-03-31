@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers.anyString
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
-import uk.gov.justice.digital.hmpps.tokenverification.service.JwtAuthHelper.JwtParameters
 import java.text.ParseException
 import java.util.*
 import javax.validation.ValidationException
@@ -21,6 +20,8 @@ import javax.validation.ValidationException
 class TokenServiceTest {
   private val tokenRepository: TokenRepository = mock()
   private val tokenService = TokenService(tokenRepository)
+
+  private val jwtHelper = JwtAuthHelper()
 
   @Nested
   inner class verifyToken {
@@ -32,7 +33,7 @@ class TokenServiceTest {
 
     @Test
     fun `verify token jwt blank`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "bob", jwtId = ""))
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "")
       assertThatThrownBy { tokenService.verifyToken(jwt) }
           .isInstanceOf(ValidationException::class.java)
           .hasMessage("Unable to find jwtId from token")
@@ -40,7 +41,7 @@ class TokenServiceTest {
 
     @Test
     fun `verify token subject blank`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "", jwtId = "jwt id"))
+      val jwt = jwtHelper.createJwt(subject = "", jwtId = "jwt id")
       assertThatThrownBy { tokenService.verifyToken(jwt) }
           .isInstanceOf(ValidationException::class.java)
           .hasMessage("Unable to find subject from token")
@@ -48,14 +49,15 @@ class TokenServiceTest {
 
     @Test
     fun `verify token not found`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "bob", jwtId = "jwt id"))
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
       val tokenDto = tokenService.verifyToken(jwt)
       assertThat(tokenDto).isEqualTo(TokenDto(active = false))
     }
 
+
     @Test
     fun `verify token`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "bob", jwtId = "jwt id"))
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
       whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(Token("access id", "auth id", "subj")))
       val tokenDto = tokenService.verifyToken(jwt)
       assertThat(tokenDto).isEqualTo(TokenDto(active = true))
@@ -67,7 +69,7 @@ class TokenServiceTest {
   inner class addToken {
     @Test
     fun `add token`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "bob", jwtId = "jwt id"))
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
       tokenService.addToken("auth id", jwt)
       verify(tokenRepository).save(Token("jwt id", "auth id", "bob"))
     }
@@ -77,7 +79,7 @@ class TokenServiceTest {
   inner class addRefreshToken {
     @Test
     fun `refresh token, access token not found`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters("bob"))
+      val jwt = jwtHelper.createJwt("bob")
 
       whenever(tokenRepository.findById(anyString())).thenReturn(Optional.empty())
 
@@ -89,7 +91,7 @@ class TokenServiceTest {
 
     @Test
     fun `refresh token`() {
-      val jwt = JwtAuthHelper().createJwt(JwtParameters(subject = "joe", jwtId = "jwt id"))
+      val jwt = jwtHelper.createJwt(subject = "joe", jwtId = "jwt id")
 
       whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(Token("access id", "auth id", "subj")))
 

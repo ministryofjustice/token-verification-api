@@ -1,12 +1,14 @@
-@file:Suppress("DEPRECATION")
-
 package uk.gov.justice.digital.hmpps.tokenverification.service
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import org.springframework.context.annotation.Bean
+import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.stereotype.Component
 import java.security.KeyPair
 import java.security.KeyPairGenerator
+import java.security.interfaces.RSAPublicKey
 import java.time.Duration
 import java.util.*
 import java.util.UUID
@@ -22,24 +24,25 @@ class JwtAuthHelper {
     keyPair = gen.generateKeyPair()
   }
 
-  fun createJwt(parameters: JwtParameters): String {
+  @Bean
+  fun jwtDecoder(): JwtDecoder = NimbusJwtDecoder.withPublicKey(keyPair.public as RSAPublicKey).build()
+
+  fun createJwt(subject: String,
+                scope: List<String>? = listOf(),
+                roles: List<String>? = listOf(),
+                expiryTime: Duration = Duration.ofHours(1),
+                jwtId: String = UUID.randomUUID().toString()): String {
     val claims = HashMap<String, Any>()
-    claims["user_name"] = parameters.subject
+    claims["user_name"] = subject
     claims["client_id"] = "elite2apiclient"
-    if (!parameters.roles.isNullOrEmpty()) claims["authorities"] = parameters.roles
-    if (!parameters.scope.isNullOrEmpty()) claims["scope"] = parameters.scope
+    if (!roles.isNullOrEmpty()) claims["authorities"] = roles
+    if (!scope.isNullOrEmpty()) claims["scope"] = scope
     return Jwts.builder()
-        .setId(parameters.jwtId)
-        .setSubject(parameters.subject)
+        .setId(jwtId)
+        .setSubject(subject)
         .addClaims(claims)
-        .setExpiration(Date(System.currentTimeMillis() + parameters.expiryTime.toMillis()))
+        .setExpiration(Date(System.currentTimeMillis() + expiryTime.toMillis()))
         .signWith(SignatureAlgorithm.RS256, keyPair.private)
         .compact()
   }
-
-  data class JwtParameters(val subject: String,
-                           val scope: List<String>? = listOf(),
-                           val roles: List<String>? = listOf(),
-                           val expiryTime: Duration = Duration.ofHours(1),
-                           val jwtId: String = UUID.randomUUID().toString())
 }
