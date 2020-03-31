@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.tokenverification.config
 
 import com.microsoft.applicationinsights.extensibility.ContextInitializer
-import com.microsoft.applicationinsights.telemetry.TelemetryContext
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.info.BuildProperties
@@ -19,12 +18,7 @@ class VersionOutputter(buildProperties: BuildProperties) {
   }
 
   @Bean
-  fun versionContextInitializer() = ContextInitializer {
-    @Suppress("unused")
-    fun initialize(context: TelemetryContext) {
-      context.component.setVersion(version)
-    }
-  }
+  fun versionContextInitializer() = ContextInitializer { it.component.setVersion(version) }
 
   companion object {
     private val log = LoggerFactory.getLogger(VersionOutputter::class.java)
