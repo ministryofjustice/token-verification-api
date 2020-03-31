@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.tokenverification.service
 
-import com.nimbusds.jwt.SignedJWT
 import org.slf4j.LoggerFactory
+import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
@@ -9,32 +9,33 @@ import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
 import javax.validation.ValidationException
 
 
+@Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
-class TokenService(private val tokenRepository: TokenRepository) {
+class TokenService(private val tokenRepository: TokenRepository, private val jwtDecoder: JwtDecoder) {
   fun verifyToken(jwt: String): TokenDto {
-    val parsedJwt = validateJwt(jwt)
-    log.info("Verifying token with id {}", parsedJwt.jwtClaimsSet.jwtid)
+    val (jwtId, _) = validateJwt(jwt)
+    log.info("Verifying token with id {}", jwtId)
 
-    return tokenRepository.findById(parsedJwt.jwtClaimsSet.jwtid).map {
+    return tokenRepository.findById(jwtId).map {
       TokenDto(active = true)
     }.orElseGet { TokenDto(active = false) }
   }
 
   fun addToken(authJwtId: String, jwt: String) {
-    val parsedJwt = validateJwt(jwt)
+    val (jwtId, subject) = validateJwt(jwt)
 
-    log.info("Adding token with authJwtId of {} and id {}", authJwtId, parsedJwt.jwtClaimsSet.jwtid)
+    log.info("Adding token with authJwtId of {} and id {}", authJwtId, jwtId)
 
-    tokenRepository.save(Token(parsedJwt.jwtClaimsSet.jwtid, authJwtId, parsedJwt.jwtClaimsSet.subject))
+    tokenRepository.save(Token(jwtId, authJwtId, subject))
   }
 
   fun addRefreshToken(accessJwtId: String, jwt: String) {
-    val parsedJwt = validateJwt(jwt)
+    val (jwtId, subject) = validateJwt(jwt)
 
     val accessToken = tokenRepository.findById(accessJwtId)
     accessToken.ifPresent {
-      log.info("Adding refresh token with authJwtId of {} and id {}", it.authJwtId, parsedJwt.jwtClaimsSet.jwtid)
-      tokenRepository.save(Token(parsedJwt.jwtClaimsSet.jwtid, it.authJwtId, parsedJwt.jwtClaimsSet.subject))
+      log.info("Adding refresh token with authJwtId of {} and id {}", it.authJwtId, jwtId)
+      tokenRepository.save(Token(jwtId, it.authJwtId, subject))
     }
   }
 
@@ -45,23 +46,22 @@ class TokenService(private val tokenRepository: TokenRepository) {
     tokens.forEach { tokenRepository.delete(it) }
   }
 
-  private fun validateJwt(jwt: String): SignedJWT {
-    val parsedJwt = SignedJWT.parse(jwt)
+  private fun validateJwt(jwt: String): Pair<String, String> {
+    val parsedJwt = jwtDecoder.decode(jwt)
 
-    if (parsedJwt.jwtClaimsSet.jwtid.isNullOrBlank()) {
-      log.info("Unable to retrieve jwt id due to jwtId being null or blank")
+    val jwtId = parsedJwt.getClaimAsString("jti")
+    if (jwtId.isNullOrBlank()) {
+      log.info("Unable to retrieve jwt id due to jti being null or blank")
       throw ValidationException("Unable to find jwtId from token")
     }
 
-    if (parsedJwt.jwtClaimsSet.subject.isNullOrBlank()) {
+    val subject = parsedJwt.getClaimAsString("sub")
+    if (subject.isNullOrBlank()) {
       log.info("Unable to retrieve jwt id due to subject being null or blank")
       throw ValidationException("Unable to find subject from token")
     }
 
-    // TODO: verify JWT
-
-    // TODO: check not expired?
-    return parsedJwt
+    return Pair(jwtId, subject)
   }
 
   companion object {
