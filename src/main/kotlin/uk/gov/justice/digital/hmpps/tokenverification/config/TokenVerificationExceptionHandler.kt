@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.tokenverification
+package uk.gov.justice.digital.hmpps.tokenverification.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

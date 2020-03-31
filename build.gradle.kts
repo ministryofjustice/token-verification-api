@@ -37,7 +37,7 @@ java {
 
 dependencyCheck {
   failBuildOnCVSS = 5f
-  suppressionFiles = listOf()
+  suppressionFiles = listOf("dependency-check-suppress-spring.xml")
   format = ALL
   analyzers.assemblyEnabled = false
 }
@@ -73,6 +73,8 @@ springBoot {
   }
 }
 
+extra["spring-security.version"] = "5.3.0.RELEASE" // Updated since spring-boot-starter-oauth2-resource-server-2.2.5.RELEASE only pulls in 5.2.2.RELEASE (still affected by CVE-2018-1258 though)
+
 dependencyManagement {
   imports { mavenBom(SpringBootPlugin.BOM_COORDINATES) }
 }
@@ -86,6 +88,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-data-redis")
+  implementation("org.springframework.boot:spring-boot-starter-security")
+  implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
   implementation("io.springfox:springfox-swagger2:2.9.2")
   implementation("io.springfox:springfox-swagger-ui:2.9.2")

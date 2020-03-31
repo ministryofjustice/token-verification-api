@@ -13,6 +13,9 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "logstash"
 
+  - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+    value: "{{ .Values.env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI }}"
+
   - name: APPLICATION_INSIGHTS_IKEY
     valueFrom:
       secretKeyRef:
