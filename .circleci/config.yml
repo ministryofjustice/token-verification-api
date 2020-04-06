@@ -4,13 +4,10 @@ parameters:
   image_name:
     type: string
     default: "quay.io/hmpps/token-verification-api"
-  app_name:
-    type: string
-    default: "token-verification-api"
 
 orbs:
-  dps: ministryofjustice/dps@1.1.0
   owasp: entur/owasp@0.0.6
+  dps: ministryofjustice/dps@1.2.0
 
 executors:
   validator:
@@ -53,6 +50,8 @@ workflows:
           filters:
             tags:
               ignore: /.*/
+      - dps/helm_lint:
+          name: helm_lint
       - dps/build_docker:
           name: build_docker
           image_name: << pipeline.parameters.image_name >>
@@ -63,13 +62,13 @@ workflows:
       - dps/deploy_env:
           name: deploy_dev
           env: "dev"
-          app_name: << pipeline.parameters.app_name >>
           filters:
             branches:
               only:
                 - master
           requires:
             - validate
+            - helm_lint
             - build_docker
       - request-preprod-approval:
           type: approval
@@ -78,7 +77,6 @@ workflows:
       - dps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          app_name: << pipeline.parameters.app_name >>
           context: token-verification-api-preprod
           requires:
             - request-preprod-approval
@@ -89,7 +87,6 @@ workflows:
       - dps/deploy_env:
           name: deploy_prod
           env: "prod"
-          app_name: << pipeline.parameters.app_name >>
           slack_notification: true
           context: token-verification-api-prod
           requires:
