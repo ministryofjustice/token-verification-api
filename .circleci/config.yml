@@ -1,13 +1,8 @@
 version: 2.1
 
-parameters:
-  image_name:
-    type: string
-    default: "quay.io/hmpps/token-verification-api"
-
 orbs:
   owasp: entur/owasp@0.0.6
-  dps: ministryofjustice/dps@1.2.0
+  dps: ministryofjustice/dps@1.2.1
 
 executors:
   validator:
@@ -54,7 +49,6 @@ workflows:
           name: helm_lint
       - dps/build_docker:
           name: build_docker
-          image_name: << pipeline.parameters.image_name >>
           filters:
             branches:
               only:
