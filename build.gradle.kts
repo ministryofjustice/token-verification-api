@@ -8,9 +8,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ISO_DATE
 
 plugins {
-  kotlin("jvm") version "1.3.71"
-  kotlin("plugin.spring") version "1.3.71"
-  kotlin("plugin.jpa") version "1.3.71"
+  kotlin("jvm") version "1.3.72"
+  kotlin("plugin.spring") version "1.3.72"
+  kotlin("plugin.jpa") version "1.3.72"
   id("org.springframework.boot") version "2.2.6.RELEASE"
   id("io.spring.dependency-management") version "1.0.9.RELEASE"
   id("org.owasp.dependencycheck") version "5.3.2.1"
@@ -73,7 +73,7 @@ springBoot {
   }
 }
 
-extra["spring-security.version"] = "5.3.0.RELEASE" // Updated since spring-boot-starter-oauth2-resource-server-2.2.5.RELEASE only pulls in 5.2.2.RELEASE (still affected by CVE-2018-1258 though)
+extra["spring-security.version"] = "5.3.1.RELEASE" // Updated since spring-boot-starter-oauth2-resource-server-2.2.5.RELEASE only pulls in 5.2.2.RELEASE (still affected by CVE-2018-1258 though)
 
 dependencyManagement {
   imports { mavenBom(SpringBootPlugin.BOM_COORDINATES) }
@@ -101,8 +101,8 @@ dependencies {
   implementation("com.github.timpeeters:spring-boot-graceful-shutdown:2.2.1")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-  implementation("com.google.guava:guava:28.2-jre")
-  implementation("com.nimbusds:nimbus-jose-jwt:8.11")
+  implementation("com.google.guava:guava:29.0-jre")
+  implementation("com.nimbusds:nimbus-jose-jwt:8.15")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude("org.junit.vintage", "junit-vintage-engine")
