@@ -102,7 +102,7 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:29.0-jre")
-  implementation("com.nimbusds:nimbus-jose-jwt:8.15")
+  implementation("com.nimbusds:nimbus-jose-jwt:8.16")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test") {
     exclude("org.junit.vintage", "junit-vintage-engine")

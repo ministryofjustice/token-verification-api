@@ -11,7 +11,6 @@ import java.security.KeyPairGenerator
 import java.security.interfaces.RSAPublicKey
 import java.time.Duration
 import java.util.*
-import java.util.UUID
 
 
 @Component
@@ -32,11 +31,9 @@ class JwtAuthHelper {
                 roles: List<String>? = listOf(),
                 expiryTime: Duration = Duration.ofHours(1),
                 jwtId: String = UUID.randomUUID().toString()): String {
-    val claims = HashMap<String, Any>()
-    claims["user_name"] = subject
-    claims["client_id"] = "elite2apiclient"
-    if (!roles.isNullOrEmpty()) claims["authorities"] = roles
-    if (!scope.isNullOrEmpty()) claims["scope"] = scope
+    val claims = mutableMapOf<String, Any>("user_name" to subject, "client_id" to "elite2apiclient")
+    roles?.let { claims["authorities"] = roles }
+    scope?.let { claims["scope"] = scope }
     return Jwts.builder()
         .setId(jwtId)
         .setSubject(subject)
