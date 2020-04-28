@@ -81,7 +81,7 @@ class TokenResourceRedisTest : IntegrationTest() {
   }
 
   private fun addToken(authId: String, jwt: String) {
-    webTestClient.post().uri("/token/$authId")
+    webTestClient.post().uri { it.path("/token").queryParam("authJwtId", authId).build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
@@ -90,7 +90,7 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   @Suppress("SameParameterValue")
   private fun addRefreshToken(accessJwtId: String, jwt: String) {
-    webTestClient.post().uri("/token/refresh/$accessJwtId")
+    webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", accessJwtId).build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
@@ -98,7 +98,7 @@ class TokenResourceRedisTest : IntegrationTest() {
   }
 
   private fun revokeTokens(authId: String) {
-    webTestClient.delete().uri("/token/$authId")
+    webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", authId).build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .exchange()
         .expectStatus().isOk
