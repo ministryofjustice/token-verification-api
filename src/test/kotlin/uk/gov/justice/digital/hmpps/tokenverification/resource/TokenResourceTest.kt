@@ -74,7 +74,7 @@ class TokenResourceTest : IntegrationTest() {
   @Test
   fun `add token`() {
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
-    webTestClient.post().uri("/token/auth_id")
+    webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "auth_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
@@ -84,9 +84,21 @@ class TokenResourceTest : IntegrationTest() {
   }
 
   @Test
+  fun `add token with encoded slash`() {
+    val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+    webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "4QpGwPH2X/3KOAda3tlv/HjVHWo=").build() }
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+        .bodyValue(jwt)
+        .exchange()
+        .expectStatus().isOk
+
+    verify(tokenRepository).save(Token("jwt id", "4QpGwPH2X/3KOAda3tlv/HjVHWo=", "bob"))
+  }
+
+  @Test
   fun `add token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
-    webTestClient.post().uri("/token/auth_id")
+    webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "auth_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
         .bodyValue(jwt)
         .exchange()
@@ -100,7 +112,7 @@ class TokenResourceTest : IntegrationTest() {
     whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(Token("access id", "auth id", "subj")))
 
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
-    webTestClient.post().uri("/token/refresh/access_jwt_id")
+    webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "access_jwt_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .bodyValue(jwt)
         .exchange()
@@ -112,7 +124,7 @@ class TokenResourceTest : IntegrationTest() {
   @Test
   fun `add refresh token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
-    webTestClient.post().uri("/token/refresh/access_jwt_id")
+    webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "access_jwt_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
         .bodyValue(jwt)
         .exchange()
@@ -127,7 +139,7 @@ class TokenResourceTest : IntegrationTest() {
     whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(listOf(
         token))
 
-    webTestClient.delete().uri("/token/auth_jwt_id")
+    webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "auth_jwt_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
         .exchange()
         .expectStatus().isOk
@@ -137,7 +149,7 @@ class TokenResourceTest : IntegrationTest() {
 
   @Test
   fun `revoke token incorrect role`() {
-    webTestClient.delete().uri("/token/auth_jwt_id")
+    webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "auth_jwt_id").build() }
         .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
         .exchange()
         .expectStatus().isForbidden
