@@ -37,22 +37,24 @@ class TokenResource(private val tokenService: TokenService) {
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @PostMapping
   fun addToken(@RequestParam(value = "authJwtId", required = true) authJwtId: String, @RequestBody jwt: String) {
-    tokenService.addToken(authJwtId, jwt)
+    tokenService.addToken(authJwtId.replaceSpaceWithPlus(), jwt)
   }
 
   @ApiIgnore
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @PostMapping("refresh")
   fun addRefreshToken(@RequestParam(value = "accessJwtId", required = true) accessJwtId: String, @RequestBody jwt: String) {
-    tokenService.addRefreshToken(accessJwtId, jwt)
+    tokenService.addRefreshToken(accessJwtId.replaceSpaceWithPlus(), jwt)
   }
 
   @ApiIgnore
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @DeleteMapping
   fun revokeTokens(@RequestParam(value = "authJwtId", required = true) authJwtId: String) {
-    tokenService.revokeTokens(authJwtId)
+    tokenService.revokeTokens(authJwtId.replaceSpaceWithPlus())
   }
+
+  private fun String.replaceSpaceWithPlus() = replace(" ", "+")
 }
 
 @JsonInclude(NON_NULL)

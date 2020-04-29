@@ -96,6 +96,18 @@ class TokenResourceTest : IntegrationTest() {
   }
 
   @Test
+  fun `add token with plus sign`() {
+    val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+    webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+        .bodyValue(jwt)
+        .exchange()
+        .expectStatus().isOk
+
+    verify(tokenRepository).save(Token("jwt id", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=", "bob"))
+  }
+
+  @Test
   fun `add token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "auth_id").build() }
@@ -122,6 +134,20 @@ class TokenResourceTest : IntegrationTest() {
   }
 
   @Test
+  fun `add refresh token with plus sign`() {
+    whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(Token("access id", "auth id", "subj")))
+
+    val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+    webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+        .bodyValue(jwt)
+        .exchange()
+        .expectStatus().isOk
+
+    verify(tokenRepository).findById("4+QpGwPH2X/3KOAda+3tlv/HjVHWo=")
+  }
+
+  @Test
   fun `add refresh token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
     webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "access_jwt_id").build() }
@@ -145,6 +171,20 @@ class TokenResourceTest : IntegrationTest() {
         .expectStatus().isOk
 
     verify(tokenRepository).delete(token)
+  }
+
+  @Test
+  fun `revoke token with plus sign`() {
+    val token = Token("access id", "auth id", "subj")
+    whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(listOf(
+        token))
+
+    webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
+        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+        .exchange()
+        .expectStatus().isOk
+
+    verify(tokenRepository).findByAuthJwtId("4+QpGwPH2X/3KOAda+3tlv/HjVHWo=")
   }
 
   @Test
