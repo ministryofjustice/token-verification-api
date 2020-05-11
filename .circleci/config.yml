@@ -2,19 +2,11 @@ version: 2.1
 
 orbs:
   owasp: entur/owasp@0.0.10
-  dps: ministryofjustice/dps@1.2.1
-
-executors:
-  validator:
-    docker:
-      - image: circleci/openjdk:11-jdk
-    environment:
-      _JAVA_OPTIONS: -Xmx256m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2 -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs=-XX:+UseContainerSupport
-    working_directory: ~/app
+  hmpps: ministryofjustice/hmpps@1.0.0
 
 jobs:
   validate:
-    executor: validator
+    executor: hmpps/java
     steps:
       - checkout
       - restore_cache:
@@ -45,15 +37,15 @@ workflows:
           filters:
             tags:
               ignore: /.*/
-      - dps/helm_lint:
+      - hmpps/helm_lint:
           name: helm_lint
-      - dps/build_docker:
+      - hmpps/build_docker:
           name: build_docker
           filters:
             branches:
               only:
                 - master
-      - dps/deploy_env:
+      - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
           filters:
@@ -68,7 +60,7 @@ workflows:
           type: approval
           requires:
             - deploy_dev
-      - dps/deploy_env:
+      - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
           context: token-verification-api-preprod
@@ -78,7 +70,7 @@ workflows:
           type: approval
           requires:
             - deploy_preprod
-      - dps/deploy_env:
+      - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
           slack_notification: true
@@ -96,4 +88,4 @@ workflows:
                 - master
     jobs:
       - owasp/gradle_owasp_dependency_check:
-          executor: validator
+          executor: hmpps/java

@@ -23,13 +23,12 @@ import uk.gov.justice.digital.hmpps.tokenverification.service.TokenService
 @Validated
 @RequestMapping("/token", produces = [MediaType.APPLICATION_JSON_VALUE])
 class TokenResource(private val tokenService: TokenService) {
-  @PostMapping("verify")
-
   @ApiOperation(value = "Verify that a JWT is still valid.",
       notes = """A successful request to this API will return a <code>HTTP 200 - Success</code>, but this doesn't
                  indicate that the JWT is valid.  You need to check the boolean <code>active</code> flag which is
                  returned in the payload body.""")
   @ApiResponses(value = [ApiResponse(code = 400, message = "Bad request.  The JWT is invalid or has expired.", response = ErrorResponse::class, responseContainer = "List")])
+  @PostMapping("verify")
   fun verifyToken(@RequestBody @ApiParam(value = "JWT to check")
                   jwt: String): TokenDto = tokenService.verifyToken(jwt)
 
