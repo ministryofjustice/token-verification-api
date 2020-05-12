@@ -6,12 +6,14 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -29,8 +31,9 @@ class TokenResource(private val tokenService: TokenService) {
                  returned in the payload body.""")
   @ApiResponses(value = [ApiResponse(code = 400, message = "Bad request.  The JWT is invalid or has expired.", response = ErrorResponse::class, responseContainer = "List")])
   @PostMapping("verify")
-  fun verifyToken(@RequestBody @ApiParam(value = "JWT to check")
-                  jwt: String): TokenDto = tokenService.verifyToken(jwt)
+  fun verifyToken(@RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String,
+                  @RequestBody @ApiParam(value = "JWT to check") jwt: String?): TokenDto =
+      tokenService.verifyToken(jwt ?: bearerToken.substringAfter("Bearer "))
 
   @ApiIgnore
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
