@@ -25,7 +25,7 @@ class TokenResourceTest : IntegrationTest() {
   }
 
   @Test
-  fun `verify token`() {
+  fun `verify token using body`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
     val token = Token("JWT ID", "Auth id", "bob")
 
@@ -34,6 +34,19 @@ class TokenResourceTest : IntegrationTest() {
     webTestClient.post().uri("/token/verify")
         .headers(setAuthorisation())
         .bodyValue(jwt)
+        .exchange()
+        .expectStatus().isOk
+        .expectBody().json("{ active: true }")
+  }
+
+  @Test
+  fun `verify token using header`() {
+    val token = Token("JWT ID", "Auth id", "bob")
+
+    whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(token))
+
+    webTestClient.post().uri("/token/verify")
+        .headers(setAuthorisation())
         .exchange()
         .expectStatus().isOk
         .expectBody().json("{ active: true }")
