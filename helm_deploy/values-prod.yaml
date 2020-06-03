@@ -6,7 +6,6 @@ replicaCount: 4
 image:
   repository: quay.io/hmpps/token-verification-api
   tag: latest
-  pullPolicy: Always
   port: 8080
 
 ingress:
