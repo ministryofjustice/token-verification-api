@@ -9,13 +9,13 @@ services:
       - token-verification-api-db
       - oauth-server
     ports:
-      - "8080:8080"
+      - "8100:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       SPRING_PROFILES_ACTIVE: local-redis
       SPRING_REDIS_HOST: token-verification-api-db
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://token-verification-oath-server:8080/auth/.well-known/jwks.json"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://token-verification-oauth-server:8080/auth/.well-known/jwks.json"
 
   token-verification-api-db:
     image: redis
@@ -36,7 +36,9 @@ services:
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/auth/health"]
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      SPRING_PROFILES_ACTIVE: dev,token-verification
+      TOKENVERIFICATION_ENDPOINT_URL: "http://token-verification-api:8080"
+      DELIUS_ENABLED: "false"
 
 networks:
   hmpps:
