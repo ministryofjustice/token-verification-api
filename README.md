@@ -1,9 +1,9 @@
 # token-verification-api
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/token-verification-api/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/token-verification-api)
-[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/token-verification-api/badge.svg)](https://snyk.io/test/github/ministryofjustice/token-verification-api)
+[![Docker Repository on Quay](https://quay.io/repository/hmpps/token-verification-api/status)](https://quay.io/repository/hmpps/token-verification-api)
 
-Self-contained fat-jar micro-service to control verification of access and refresh tokens
+Spring Boot JSON API to control verification of access and refresh tokens of prisoners for HMPPS.
  
 ### Building
 
@@ -17,13 +17,24 @@ Self-contained fat-jar micro-service to control verification of access and refre
 ./gradlew bootRun
 ```
 
-#### Health
+### Health
 
-- `/health/ping`: will respond with status `UP` to all requests.  This should be used by dependent systems to check connectivity to token-verification-api,
+- `/health/ping`: will respond with `{"status":"UP"}` to all requests.  This should be used by dependent systems to check connectivity to token-verification-api,
 rather than calling the `/health` endpoint.
 - `/health`: provides information about the application health and its dependencies.  This should only be used
 by token-verification-api health monitoring (e.g. pager duty) and not other systems who wish to find out the state of token-verification-api.
 - `/info`: provides information about the version of deployed application.
+
+### Pre Release Testing
+
+Token verification api is best tested by interaction with auth (https://gateway.preprod.nomis-api.service.hmpps.dsd.io/auth/).  To manually smoke test / regression test token verification api prior to release:
+
+1. Login to auth
+1. Navigate to whereabouts
+1. In separate tab navigate directly to auth and logout
+1. In previous tab perform action - should be directed back to auth as not logged in (only if enabled)
+
+All the above events will generate calls to token verification and will fail if token verification is not working correctly.  The last item will only succeed if token verification is enabled for that application in that environment.
 
 #### Redis
 
