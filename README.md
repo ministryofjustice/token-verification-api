@@ -1,7 +1,7 @@
 # token-verification-api
 
 [![CircleCI](https://circleci.com/gh/ministryofjustice/token-verification-api/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/token-verification-api)
-[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/token-verification-api/badge.svg)](https://snyk.io/test/github/ministryofjustice/token-verification-api)
+[![Docker Repository on Quay](https://quay.io/repository/hmpps/token-verification-api/status)](https://quay.io/repository/hmpps/token-verification-api)
 
 Spring Boot JSON API to control verification of access and refresh tokens of prisoners for HMPPS.
  
