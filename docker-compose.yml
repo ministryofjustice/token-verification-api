@@ -27,7 +27,7 @@ services:
       - '6379:6379'
 
   oauth-server:
-    image: quay.io/hmpps/nomis-oauth2-server:latest
+    image: quay.io/hmpps/hmpps-auth:latest
     networks:
       - hmpps
     container_name: token-verification-oauth-server
