@@ -27,7 +27,7 @@ by token-verification-api health monitoring (e.g. pager duty) and not other syst
 
 ### Pre Release Testing
 
-Token verification api is best tested by interaction with auth (https://gateway.preprod.nomis-api.service.hmpps.dsd.io/auth/).  To manually smoke test / regression test token verification api prior to release:
+Token verification api is best tested by interaction with auth (https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/).  To manually smoke test / regression test token verification api prior to release:
 
 1. Login to auth
 1. Navigate to whereabouts

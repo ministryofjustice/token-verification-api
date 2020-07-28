@@ -19,4 +19,4 @@ ingress:
 
 env:
   JAVA_OPTS: "-Xmx512m"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "https://gateway.preprod.nomis-api.service.hmpps.dsd.io/auth/.well-known/jwks.json"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
