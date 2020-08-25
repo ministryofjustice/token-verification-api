@@ -7,8 +7,6 @@ image:
   repository: quay.io/hmpps/token-verification-api
   tag: latest
   port: 8080
-  livenessProbePath: /health/liveness
-  readinessProbePath: /health/readiness
 
 ingress:
   enabled: true
