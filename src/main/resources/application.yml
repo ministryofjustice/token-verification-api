@@ -27,13 +27,15 @@ management:
     web:
       base-path: /
       exposure:
-        include: 'info, health'
+        include: 'info, health, ping'
   endpoint:
     health:
       cache:
         time-to-live: 2000ms
       show-components: always
       show-details: always
+      probes:
+        enabled: true
     info:
       cache:
         time-to-live: 2000ms
