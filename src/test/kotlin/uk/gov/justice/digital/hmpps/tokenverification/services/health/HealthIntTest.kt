@@ -36,4 +36,20 @@ class HealthIntTest : IntegrationTest() {
           assertThat(it).startsWith(LocalDateTime.now().format(ISO_DATE))
         })
   }
+
+  @Test
+  fun `Health liveness page is accessible`() {
+    webTestClient.get().uri("/health/liveness")
+        .exchange()
+        .expectStatus().isOk
+        .expectBody().jsonPath("status").isEqualTo("UP")
+  }
+
+  @Test
+  fun `Health readiness page is accessible`() {
+    webTestClient.get().uri("/health/readiness")
+        .exchange()
+        .expectStatus().isOk
+        .expectBody().jsonPath("status").isEqualTo("UP")
+  }
 }
