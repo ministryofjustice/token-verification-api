@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.0.6"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "1.1.2"
   kotlin("plugin.spring") version "1.4.10"
   kotlin("plugin.jpa") version "1.4.10"
 }
@@ -21,7 +21,7 @@ dependencies {
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:29.0-jre")
-  implementation("com.nimbusds:nimbus-jose-jwt:8.20")
+  implementation("com.nimbusds:nimbus-jose-jwt:9.1.3")
 
   testImplementation("org.springframework.boot:spring-boot-starter-webflux")
   testImplementation("it.ozimov:embedded-redis:0.7.3")
