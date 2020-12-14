@@ -8,7 +8,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.springframework.boot.test.mock.mockito.MockBean
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
-import java.util.*
+import java.util.Optional
 
 class TokenResourceTest : IntegrationTest() {
   @MockBean
@@ -19,9 +19,9 @@ class TokenResourceTest : IntegrationTest() {
     val jwt = jwtHelper.createJwt(subject = "bob")
 
     webTestClient.post().uri("/token/verify")
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isUnauthorized
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isUnauthorized
   }
 
   @Test
@@ -32,11 +32,11 @@ class TokenResourceTest : IntegrationTest() {
     whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(token))
 
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation())
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
-        .expectBody().json("{ active: true }")
+      .headers(setAuthorisation())
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
+      .expectBody().json("{ active: true }")
   }
 
   @Test
@@ -46,52 +46,52 @@ class TokenResourceTest : IntegrationTest() {
     whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(token))
 
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation())
-        .exchange()
-        .expectStatus().isOk
-        .expectBody().json("{ active: true }")
+      .headers(setAuthorisation())
+      .exchange()
+      .expectStatus().isOk
+      .expectBody().json("{ active: true }")
   }
 
   @Test
   fun `verify token parse exception`() {
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation())
-        .bodyValue("not a jwt")
-        .exchange()
-        .expectStatus().isBadRequest
-        .expectBody().json("verify_token_badrequest_parse_exception".loadJson())
+      .headers(setAuthorisation())
+      .bodyValue("not a jwt")
+      .exchange()
+      .expectStatus().isBadRequest
+      .expectBody().json("verify_token_badrequest_parse_exception".loadJson())
   }
 
   @Test
   fun `verify token validation exception`() {
     val jwt = jwtHelper.createJwt(subject = "")
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation())
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isBadRequest
-        .expectBody().json("verify_token_badrequest_validation_exception".loadJson())
+      .headers(setAuthorisation())
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isBadRequest
+      .expectBody().json("verify_token_badrequest_validation_exception".loadJson())
   }
 
   @Test
   fun `verify token not found`() {
     val jwt = jwtHelper.createJwt(subject = "subj")
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation())
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
-        .expectBody().json("{ active: false }")
+      .headers(setAuthorisation())
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
+      .expectBody().json("{ active: false }")
   }
 
   @Test
   fun `add token`() {
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "auth_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).save(Token("jwt id", "auth_id", "bob"))
   }
@@ -100,10 +100,10 @@ class TokenResourceTest : IntegrationTest() {
   fun `add token with encoded slash`() {
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "4QpGwPH2X/3KOAda3tlv/HjVHWo=").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).save(Token("jwt id", "4QpGwPH2X/3KOAda3tlv/HjVHWo=", "bob"))
   }
@@ -112,10 +112,10 @@ class TokenResourceTest : IntegrationTest() {
   fun `add token with plus sign`() {
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).save(Token("jwt id", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=", "bob"))
   }
@@ -124,10 +124,10 @@ class TokenResourceTest : IntegrationTest() {
   fun `add token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", "auth_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isForbidden
+      .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isForbidden
 
     verifyZeroInteractions(tokenRepository)
   }
@@ -138,10 +138,10 @@ class TokenResourceTest : IntegrationTest() {
 
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
     webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "access_jwt_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).save(Token("jwt id", "auth id", "bob"))
   }
@@ -151,11 +151,12 @@ class TokenResourceTest : IntegrationTest() {
     whenever(tokenRepository.findById(anyString())).thenReturn(Optional.of(Token("access id", "auth id", "subj")))
 
     val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
-    webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+    webTestClient.post()
+      .uri { it.path("/token/refresh").queryParam("accessJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).findById("4+QpGwPH2X/3KOAda+3tlv/HjVHWo=")
   }
@@ -164,10 +165,10 @@ class TokenResourceTest : IntegrationTest() {
   fun `add refresh token incorrect role`() {
     val jwt = jwtHelper.createJwt(subject = "bob")
     webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", "access_jwt_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isForbidden
+      .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isForbidden
 
     verifyZeroInteractions(tokenRepository)
   }
@@ -175,13 +176,16 @@ class TokenResourceTest : IntegrationTest() {
   @Test
   fun `revoke token`() {
     val token = Token("access id", "auth id", "subj")
-    whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(listOf(
-        token))
+    whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(
+      listOf(
+        token
+      )
+    )
 
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "auth_jwt_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).delete(token)
   }
@@ -189,13 +193,16 @@ class TokenResourceTest : IntegrationTest() {
   @Test
   fun `revoke token with plus sign`() {
     val token = Token("access id", "auth id", "subj")
-    whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(listOf(
-        token))
+    whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(
+      listOf(
+        token
+      )
+    )
 
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .exchange()
+      .expectStatus().isOk
 
     verify(tokenRepository).findByAuthJwtId("4+QpGwPH2X/3KOAda+3tlv/HjVHWo=")
   }
@@ -203,13 +210,13 @@ class TokenResourceTest : IntegrationTest() {
   @Test
   fun `revoke token incorrect role`() {
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "auth_jwt_id").build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
-        .exchange()
-        .expectStatus().isForbidden
+      .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
+      .exchange()
+      .expectStatus().isForbidden
 
     verifyZeroInteractions(tokenRepository)
   }
 
   private fun String.loadJson(): String =
-      TokenResourceTest::class.java.getResource("$this.json").readText()
+    TokenResourceTest::class.java.getResource("$this.json").readText()
 }

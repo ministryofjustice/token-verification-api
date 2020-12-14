@@ -8,7 +8,6 @@ import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
 import javax.validation.ValidationException
 
-
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 class TokenService(private val tokenRepository: TokenRepository, private val jwtDecoder: JwtDecoder) {
