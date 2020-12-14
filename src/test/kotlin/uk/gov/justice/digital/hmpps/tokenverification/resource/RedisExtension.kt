@@ -5,7 +5,6 @@ import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import redis.embedded.RedisServer
 
-
 class RedisExtension : BeforeAllCallback, AfterAllCallback {
   companion object {
     @JvmField

@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.ActiveProfiles
 import uk.gov.justice.digital.hmpps.tokenverification.resource.RedisExtension
 
-
 @ExtendWith(RedisExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)

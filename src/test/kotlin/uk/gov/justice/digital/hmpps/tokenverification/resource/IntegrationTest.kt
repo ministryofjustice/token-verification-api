@@ -8,7 +8,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.tokenverification.service.JwtAuthHelper
 import java.time.Duration
 
-
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -24,11 +23,16 @@ abstract class IntegrationTest {
     System.setProperty("http.keepAlive", "false")
   }
 
-  internal fun setAuthorisation(user: String = "token-verification-api-client", roles: List<String> = listOf()): (HttpHeaders) -> Unit {
-    val token = jwtHelper.createJwt(subject = user,
-        scope = listOf("read", "write"),
-        expiryTime = Duration.ofHours(1L),
-        roles = roles)
+  internal fun setAuthorisation(
+    user: String = "token-verification-api-client",
+    roles: List<String> = listOf()
+  ): (HttpHeaders) -> Unit {
+    val token = jwtHelper.createJwt(
+      subject = user,
+      scope = listOf("read", "write"),
+      expiryTime = Duration.ofHours(1L),
+      roles = roles
+    )
     return { it.set(HttpHeaders.AUTHORIZATION, "Bearer $token") }
   }
 }

@@ -14,9 +14,10 @@ interface TokenRepository : CrudRepository<Token, String> {
 
 @RedisHash(value = "token", timeToLive = 86400) // expire all tokens after a day
 data class Token(
-    @Id
-    val jwtId: String,
-    @Indexed
-    val authJwtId: String,
-    @Indexed
-    val subject: String)
+  @Id
+  val jwtId: String,
+  @Indexed
+  val authJwtId: String,
+  @Indexed
+  val subject: String
+)

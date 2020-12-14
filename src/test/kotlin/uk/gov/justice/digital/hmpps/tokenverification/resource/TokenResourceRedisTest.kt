@@ -73,34 +73,34 @@ class TokenResourceRedisTest : IntegrationTest() {
 
   private fun verifyToken(jwt: String, found: Boolean = true) {
     webTestClient.post().uri("/token/verify")
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
-        .expectBody().jsonPath("active", found)
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
+      .expectBody().jsonPath("active", found)
   }
 
   private fun addToken(authId: String, jwt: String) {
     webTestClient.post().uri { it.path("/token").queryParam("authJwtId", authId).build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
   }
 
   @Suppress("SameParameterValue")
   private fun addRefreshToken(accessJwtId: String, jwt: String) {
     webTestClient.post().uri { it.path("/token/refresh").queryParam("accessJwtId", accessJwtId).build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .bodyValue(jwt)
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .bodyValue(jwt)
+      .exchange()
+      .expectStatus().isOk
   }
 
   private fun revokeTokens(authId: String) {
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", authId).build() }
-        .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
-        .exchange()
-        .expectStatus().isOk
+      .headers(setAuthorisation(roles = listOf("ROLE_AUTH_TOKEN_VERIFICATION")))
+      .exchange()
+      .expectStatus().isOk
   }
 }

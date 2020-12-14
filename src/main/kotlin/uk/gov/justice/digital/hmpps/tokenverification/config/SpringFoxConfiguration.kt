@@ -15,7 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2
 import uk.gov.justice.digital.hmpps.tokenverification.TokenVerificationApplication
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Date
+import java.util.Optional
 
 @Configuration
 @EnableSwagger2
@@ -25,16 +26,23 @@ class SpringFoxConfiguration(buildProperties: BuildProperties) {
 
   @Bean
   fun api(): Docket {
-    val apiInfo = ApiInfo("Token Verification API Documentation", "API for providing token verification.",
-        version, "", Contact("HMPPS Digital Studio", "", "feedback@digital.justice.gov.uk"),
-        "", "", emptyList())
+    val apiInfo = ApiInfo(
+      "Token Verification API Documentation",
+      "API for providing token verification.",
+      version,
+      "",
+      Contact("HMPPS Digital Studio", "", "feedback@digital.justice.gov.uk"),
+      "",
+      "",
+      emptyList()
+    )
     val docket = Docket(DocumentationType.SWAGGER_2)
-        .useDefaultResponseMessages(false)
-        .apiInfo(apiInfo)
-        .select()
-        .apis(RequestHandlerSelectors.basePackage(TokenVerificationApplication::class.java.getPackage().getName()))
-        .paths(PathSelectors.any())
-        .build()
+      .useDefaultResponseMessages(false)
+      .apiInfo(apiInfo)
+      .select()
+      .apis(RequestHandlerSelectors.basePackage(TokenVerificationApplication::class.java.getPackage().getName()))
+      .paths(PathSelectors.any())
+      .build()
     docket.genericModelSubstitutes(Optional::class.java)
     docket.directModelSubstitute(ZonedDateTime::class.java, Date::class.java)
     docket.directModelSubstitute(LocalDateTime::class.java, Date::class.java)
