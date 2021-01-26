@@ -1,4 +1,2 @@
 spring:
-  profiles.include: dev
-
   redis.port: 6380
