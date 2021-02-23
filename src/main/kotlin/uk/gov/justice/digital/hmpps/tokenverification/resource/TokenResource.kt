@@ -28,7 +28,7 @@ class TokenResource(private val tokenService: TokenService) {
   @ApiOperation(
     value = "Verify that a JWT is still valid.",
     notes =
-      """A successful request to this API will return a <code>HTTP 200 - Success</code>, but this doesn't
+    """A successful request to this API will return a <code>HTTP 200 - Success</code>, but this doesn't
                  indicate that the JWT is valid.  You need to check the boolean <code>active</code> flag which is
                  returned in the payload body."""
   )
