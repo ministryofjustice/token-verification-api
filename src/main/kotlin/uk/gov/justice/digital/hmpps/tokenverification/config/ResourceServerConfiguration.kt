@@ -26,7 +26,7 @@ class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
         auth.antMatchers(
           "/favicon.ico", "/csrf", "/health/**", "/info",
           "/webjars/**", "/v2/api-docs",
-          "/swagger-ui.html", "/swagger-resources", "/swagger-resources/configuration/ui",
+          "/swagger-ui/**", "/swagger-resources", "/swagger-resources/configuration/ui",
           "/swagger-resources/configuration/security"
         )
           .permitAll().anyRequest().authenticated()
