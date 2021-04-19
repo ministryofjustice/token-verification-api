@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.6"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.7"
   kotlin("plugin.spring") version "1.4.32"
   kotlin("plugin.jpa") version "1.4.32"
 }
@@ -23,4 +23,12 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-webflux")
   testImplementation("it.ozimov:embedded-redis:0.7.3")
   testImplementation("io.jsonwebtoken:jjwt:0.9.1")
+}
+
+tasks {
+  compileKotlin {
+    kotlinOptions {
+      jvmTarget = "15"
+    }
+  }
 }
