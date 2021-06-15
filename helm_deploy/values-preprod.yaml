@@ -20,6 +20,7 @@ ingress:
 env:
   JAVA_OPTS: "-Xmx512m"
   SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
+  APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
 
 # CloudPlatform AlertManager receiver to route promethues alerts to slack
 generic-prometheus-alerts:
