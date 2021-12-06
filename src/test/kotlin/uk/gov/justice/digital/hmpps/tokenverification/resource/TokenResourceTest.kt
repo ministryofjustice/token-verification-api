@@ -1,10 +1,10 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.springframework.boot.test.mock.mockito.MockBean
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
@@ -36,7 +36,7 @@ class TokenResourceTest : IntegrationTest() {
       .bodyValue(jwt)
       .exchange()
       .expectStatus().isOk
-      .expectBody().json("{ active: true }")
+      .expectBody().json("{ \"active\": true }")
   }
 
   @Test
@@ -49,7 +49,7 @@ class TokenResourceTest : IntegrationTest() {
       .headers(setAuthorisation())
       .exchange()
       .expectStatus().isOk
-      .expectBody().json("{ active: true }")
+      .expectBody().json("{ \"active\": true }")
   }
 
   @Test
@@ -81,7 +81,7 @@ class TokenResourceTest : IntegrationTest() {
       .bodyValue(jwt)
       .exchange()
       .expectStatus().isOk
-      .expectBody().json("{ active: false }")
+      .expectBody().json("{ \"active\": false }")
   }
 
   @Test
@@ -129,7 +129,7 @@ class TokenResourceTest : IntegrationTest() {
       .exchange()
       .expectStatus().isForbidden
 
-    verifyZeroInteractions(tokenRepository)
+    verifyNoInteractions(tokenRepository)
   }
 
   @Test
@@ -170,7 +170,7 @@ class TokenResourceTest : IntegrationTest() {
       .exchange()
       .expectStatus().isForbidden
 
-    verifyZeroInteractions(tokenRepository)
+    verifyNoInteractions(tokenRepository)
   }
 
   @Test
@@ -214,7 +214,7 @@ class TokenResourceTest : IntegrationTest() {
       .exchange()
       .expectStatus().isForbidden
 
-    verifyZeroInteractions(tokenRepository)
+    verifyNoInteractions(tokenRepository)
   }
 
   private fun String.loadJson(): String =
