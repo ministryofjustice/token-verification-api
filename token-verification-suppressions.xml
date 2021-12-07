@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <suppress>
+    <!-- suppressed as actually affects redis, not apis that use redis -->
+    <notes><![CDATA[
+    file name: spring-data-redis-2.6.0.jar
+    ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.springframework\.data/spring\-data\-redis@.*$</packageUrl>
+    <cpe>cpe:/a:redis:redis</cpe>
+  </suppress>
+</suppressions>
