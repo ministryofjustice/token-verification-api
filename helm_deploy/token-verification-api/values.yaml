@@ -10,8 +10,9 @@ generic-service:
 
   ingress:
     enabled: true
+    v1_2_enabled: true
+    v0_47_enabled: true
     tlsSecretName: token-verification-api-cert
-    contextColour: green
 
   env:
     SERVER_PORT: 8080
