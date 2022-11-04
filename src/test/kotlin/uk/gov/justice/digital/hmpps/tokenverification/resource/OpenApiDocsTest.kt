@@ -1,21 +1,13 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
+import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.MediaType.APPLICATION_JSON
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.web.reactive.server.WebTestClient
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ISO_DATE
 
-@Suppress("SpringJavaInjectionPointsAutowiringInspection")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class OpenApiDocsTest {
-
-  @Autowired
-  lateinit var webTestClient: WebTestClient
+@ExtendWith(RedisExtension::class)
+class OpenApiDocsTest : IntegrationTest() {
 
   @Test
   fun `open api docs are available`() {
