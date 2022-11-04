@@ -2,10 +2,13 @@ package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
-import io.swagger.annotations.ApiOperation
-import io.swagger.annotations.ApiParam
-import io.swagger.annotations.ApiResponse
-import io.swagger.annotations.ApiResponses
+import io.swagger.v3.oas.annotations.Hidden
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import springfox.documentation.annotations.ApiIgnore
 import uk.gov.justice.digital.hmpps.tokenverification.config.ErrorResponse
 import uk.gov.justice.digital.hmpps.tokenverification.service.TokenService
 
@@ -25,9 +27,9 @@ import uk.gov.justice.digital.hmpps.tokenverification.service.TokenService
 @Validated
 @RequestMapping("/token", produces = [MediaType.APPLICATION_JSON_VALUE])
 class TokenResource(private val tokenService: TokenService) {
-  @ApiOperation(
-    value = "Verify that a JWT is still valid.",
-    notes =
+  @Operation(
+    summary = "Verify that a JWT is still valid.",
+    description =
     """A successful request to this API will return a <code>HTTP 200 - Success</code>, but this doesn't
                  indicate that the JWT is valid.  You need to check the boolean <code>active</code> flag which is
                  returned in the payload body."""
@@ -35,28 +37,36 @@ class TokenResource(private val tokenService: TokenService) {
   @ApiResponses(
     value = [
       ApiResponse(
-        code = 400,
-        message = "Bad request.  The JWT is invalid or has expired.",
-        response = ErrorResponse::class,
-        responseContainer = "List"
+        responseCode = "200",
+        description = "OK"
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "Bad request.  The JWT is invalid or has expired.",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = ErrorResponse::class)
+          )
+        ]
       )
     ]
   )
   @PostMapping("verify")
   fun verifyToken(
     @RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String,
-    @RequestBody @ApiParam(value = "JWT to check") jwt: String?
+    @RequestBody @Parameter(name = "JWT to check") jwt: String?
   ): TokenDto =
     tokenService.verifyToken(jwt ?: bearerToken.substringAfter("Bearer "))
 
-  @ApiIgnore
+  @Hidden
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @PostMapping
   fun addToken(@RequestParam(value = "authJwtId", required = true) authJwtId: String, @RequestBody jwt: String) {
     tokenService.addToken(authJwtId.replaceSpaceWithPlus(), jwt)
   }
 
-  @ApiIgnore
+  @Hidden
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @PostMapping("refresh")
   fun addRefreshToken(
@@ -66,7 +76,7 @@ class TokenResource(private val tokenService: TokenService) {
     tokenService.addRefreshToken(accessJwtId.replaceSpaceWithPlus(), jwt)
   }
 
-  @ApiIgnore
+  @Hidden
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")
   @DeleteMapping
   fun revokeTokens(@RequestParam(value = "authJwtId", required = true) authJwtId: String) {
