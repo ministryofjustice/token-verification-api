@@ -25,13 +25,13 @@ abstract class IntegrationTest {
 
   internal fun setAuthorisation(
     user: String = "token-verification-api-client",
-    roles: List<String> = listOf()
+    roles: List<String> = listOf(),
   ): (HttpHeaders) -> Unit {
     val token = jwtHelper.createJwt(
       subject = user,
       scope = listOf("read", "write"),
       expiryTime = Duration.ofHours(1L),
-      roles = roles
+      roles = roles,
     )
     return { it.set(HttpHeaders.AUTHORIZATION, "Bearer $token") }
   }

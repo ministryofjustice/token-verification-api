@@ -26,7 +26,7 @@ class ResourceServerConfiguration : WebSecurityConfigurerAdapter() {
         auth.antMatchers(
           "/favicon.ico", "/csrf", "/health/**", "/info",
           "/webjars/**", "/v2/api-docs",
-          "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html"
+          "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html",
         )
           .permitAll().anyRequest().authenticated()
       }
@@ -51,7 +51,7 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
     if (jwt.claims.containsKey("authorities")) {
       authorities.addAll(
         (jwt.claims["authorities"] as Collection<String?>)
-          .map { SimpleGrantedAuthority(it) }.toSet()
+          .map { SimpleGrantedAuthority(it) }.toSet(),
       )
     }
     return authorities.toSet()

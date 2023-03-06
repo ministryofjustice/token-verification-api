@@ -35,7 +35,7 @@ class HealthIntTest : IntegrationTest() {
       .expectBody().jsonPath("components.healthInfo.details.version").value(
         Consumer<String> {
           assertThat(it).startsWith(LocalDateTime.now().format(ISO_DATE))
-        }
+        },
       )
   }
 

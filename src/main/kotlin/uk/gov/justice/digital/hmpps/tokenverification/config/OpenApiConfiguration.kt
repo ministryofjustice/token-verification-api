@@ -20,12 +20,12 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
         Server().url("https://token-verification-api-preprod.prison.service.justice.gov.uk").description("PreProd"),
         Server().url("https://token-verification-api-dev.prison.service.justice.gov.uk").description("Development"),
         Server().url("http://localhost:8080").description("Local"),
-      )
+      ),
     )
     .info(
       Info().title("Token Verification API")
         .version(version)
         .description("API for providing token verification")
-        .contact(Contact().name("HMPPS Digital Studio").email("feedback@digital.justice.gov.uk"))
+        .contact(Contact().name("HMPPS Digital Studio").email("feedback@digital.justice.gov.uk")),
     )
 }

@@ -31,7 +31,7 @@ class JwtAuthHelper {
     scope: List<String>? = listOf(),
     roles: List<String>? = listOf(),
     expiryTime: Duration = Duration.ofHours(1),
-    jwtId: String = UUID.randomUUID().toString()
+    jwtId: String = UUID.randomUUID().toString(),
   ): String {
     val claims = mutableMapOf<String, Any>("user_name" to subject, "client_id" to "elite2apiclient")
     roles?.let { claims["authorities"] = roles }
