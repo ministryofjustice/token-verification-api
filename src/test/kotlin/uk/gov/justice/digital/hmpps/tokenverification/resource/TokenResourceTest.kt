@@ -180,8 +180,8 @@ class TokenResourceTest : IntegrationTest() {
     val token = Token("access id", "auth id", "subj")
     whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(
       listOf(
-        token
-      )
+        token,
+      ),
     )
 
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "auth_jwt_id").build() }
@@ -197,8 +197,8 @@ class TokenResourceTest : IntegrationTest() {
     val token = Token("access id", "auth id", "subj")
     whenever(tokenRepository.findByAuthJwtId(anyString())).thenReturn(
       listOf(
-        token
-      )
+        token,
+      ),
     )
 
     webTestClient.delete().uri { it.path("/token").queryParam("authJwtId", "4+QpGwPH2X/3KOAda+3tlv/HjVHWo=").build() }

@@ -19,5 +19,5 @@ data class Token(
   @Indexed
   val authJwtId: String,
   @Indexed
-  val subject: String
+  val subject: String,
 )

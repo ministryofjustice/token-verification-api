@@ -32,13 +32,13 @@ class TokenResource(private val tokenService: TokenService) {
     description =
     """A successful request to this API will return a <code>HTTP 200 - Success</code>, but this doesn't
                  indicate that the JWT is valid.  You need to check the boolean <code>active</code> flag which is
-                 returned in the payload body."""
+                 returned in the payload body.""",
   )
   @ApiResponses(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "OK"
+        description = "OK",
       ),
       ApiResponse(
         responseCode = "400",
@@ -46,16 +46,18 @@ class TokenResource(private val tokenService: TokenService) {
         content = [
           Content(
             mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class)
-          )
-        ]
-      )
-    ]
+            schema = Schema(implementation = ErrorResponse::class),
+          ),
+        ],
+      ),
+    ],
   )
   @PostMapping("verify")
   fun verifyToken(
     @RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String,
-    @RequestBody @Parameter(name = "JWT to check") jwt: String?
+    @RequestBody
+    @Parameter(name = "JWT to check")
+    jwt: String?,
   ): TokenDto =
     tokenService.verifyToken(jwt ?: bearerToken.substringAfter("Bearer "))
 
@@ -71,7 +73,7 @@ class TokenResource(private val tokenService: TokenService) {
   @PostMapping("refresh")
   fun addRefreshToken(
     @RequestParam(value = "accessJwtId", required = true) accessJwtId: String,
-    @RequestBody jwt: String
+    @RequestBody jwt: String,
   ) {
     tokenService.addRefreshToken(accessJwtId.replaceSpaceWithPlus(), jwt)
   }
