@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.4-beta-2"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.5-beta"
   kotlin("plugin.spring") version "1.8.10"
   kotlin("plugin.jpa") version "1.8.10"
 }
@@ -19,9 +19,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("org.springdoc:springdoc-openapi-ui:1.6.14")
-  implementation("org.springdoc:springdoc-openapi-kotlin:1.6.14")
-  implementation("org.springdoc:springdoc-openapi-data-rest:1.6.14")
+  implementation("org.springdoc:springdoc-openapi-ui:1.6.15")
+  implementation("org.springdoc:springdoc-openapi-kotlin:1.6.15")
+  implementation("org.springdoc:springdoc-openapi-data-rest:1.6.15")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:31.1-jre")
