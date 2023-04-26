@@ -1,12 +1,12 @@
 package uk.gov.justice.digital.hmpps.tokenverification.config
 
+import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.oauth2.jwt.BadJwtException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import javax.validation.ValidationException
 
 @RestControllerAdvice
 class TokenVerificationExceptionHandler {
