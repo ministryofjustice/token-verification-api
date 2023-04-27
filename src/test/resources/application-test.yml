@@ -1,2 +1,4 @@
 spring:
-  redis.port: 6380
+  data:
+    redis:
+      port: 6380
