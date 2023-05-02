@@ -29,7 +29,7 @@ class ResourceServerConfiguration {
       csrf { disable() }
       authorizeHttpRequests {
         listOf(
-          "/webjars/**", "/favicon.ico","/csrf",
+          "/webjars/**", "/favicon.ico", "/csrf",
           "/health/**", "/info",
           "/v3/api-docs/**", "/api/swagger.json", "/swagger-ui/**",
           "/v3/api-docs", "/swagger-ui.html",
