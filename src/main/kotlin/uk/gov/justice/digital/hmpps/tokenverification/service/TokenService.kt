@@ -1,12 +1,12 @@
 package uk.gov.justice.digital.hmpps.tokenverification.service
 
+import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
-import javax.validation.ValidationException
 
 @Suppress("SpringJavaInjectionPointsAutowiringInspection")
 @Service

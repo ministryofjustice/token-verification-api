@@ -1,11 +1,13 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.8.6-beta-4"
+
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.1.4-beta-4"
   kotlin("plugin.spring") version "1.8.21"
   kotlin("plugin.jpa") version "1.8.21"
 }
 
 configurations {
   testImplementation { exclude(group = "org.junit.vintage") }
+  testImplementation { exclude(module = "slf4j-simple") }
 }
 
 dependencyCheck {
@@ -19,16 +21,15 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
-  implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
-  implementation("org.springdoc:springdoc-openapi-data-rest:1.7.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:31.1-jre")
 
   testImplementation("org.springframework.boot:spring-boot-starter-webflux")
   testImplementation("it.ozimov:embedded-redis:0.7.3")
-  testImplementation("io.jsonwebtoken:jjwt:0.9.1")
+  testImplementation("io.jsonwebtoken:jjwt-impl:0.11.5")
+  testImplementation("io.jsonwebtoken:jjwt-jackson:0.11.5")
   testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
 }
 

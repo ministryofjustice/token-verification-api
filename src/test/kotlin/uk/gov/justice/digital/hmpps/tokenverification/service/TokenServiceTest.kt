@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.tokenverification.service
 
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
@@ -15,7 +16,6 @@ import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import uk.gov.justice.digital.hmpps.tokenverification.resource.TokenDto
 import java.time.Duration
 import java.util.Optional
-import javax.validation.ValidationException
 
 @Suppress("ClassName")
 class TokenServiceTest {
