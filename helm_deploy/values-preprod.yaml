@@ -6,7 +6,7 @@ generic-service:
     host: token-verification-api-preprod.prison.service.justice.gov.uk
 
   env:
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://hmpps-auth.hmpps-auth-dev.svc.cluster.local/auth/.well-known/jwks.json"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
