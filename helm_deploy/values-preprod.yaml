@@ -2,6 +2,7 @@
 # Declare variables to be passed into your templates.
 
 generic-service:
+  replicaCount: 2
   ingress:
     host: token-verification-api-preprod.prison.service.justice.gov.uk
 
