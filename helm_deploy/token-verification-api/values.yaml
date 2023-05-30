@@ -10,8 +10,6 @@ generic-service:
 
   ingress:
     enabled: true
-    v1_2_enabled: true
-    v0_47_enabled: false
     tlsSecretName: token-verification-api-cert
 
   env:
@@ -19,7 +17,7 @@ generic-service:
     JAVA_OPTS: "-Xmx512m"
     APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     SPRING_PROFILES_ACTIVE: "logstash"
-    SPRING_DATA_REDIS_SSL: "true"
+    SPRING_DATA_REDIS_SSL_ENABLED: "true"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
 
   namespace_secrets:
