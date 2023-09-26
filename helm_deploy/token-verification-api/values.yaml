@@ -2,6 +2,7 @@
 # Values here are the same across all environments
 generic-service:
   nameOverride: token-verification-api
+  productId: DPS017
 
   image:
     repository: quay.io/hmpps/token-verification-api
