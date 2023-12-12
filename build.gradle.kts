@@ -1,5 +1,4 @@
 plugins {
-
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "5.11.0"
   kotlin("plugin.spring") version "1.9.21"
   kotlin("plugin.jpa") version "1.9.21"
@@ -33,14 +32,14 @@ dependencies {
   testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 }
 
-java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(20))
+kotlin {
+  jvmToolchain(21)
 }
 
 tasks {
   withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-      jvmTarget = "20"
+      jvmTarget = "21"
     }
   }
 }
