@@ -29,7 +29,7 @@ class TokenServiceTest {
     fun `verify token invalid token`() {
       assertThatThrownBy { tokenService.verifyToken("not a jwt") }
         .isInstanceOf(BadJwtException::class.java)
-        .hasMessageContaining("Invalid JWT serialization")
+        .hasMessageContaining("An error occurred while attempting to decode the Jwt")
     }
 
     @Test
