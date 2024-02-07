@@ -7,8 +7,13 @@ generic-service:
     host: token-verification-api-stage.prison.service.justice.gov.uk
 
   env:
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://sign-in-dev.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://sign-in-stage.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.dev.json
+
+  namespace_secrets:
+    hmpps-redis:
+      SPRING_DATA_REDIS_HOST: "REDIS_HOST"
+      SPRING_DATA_REDIS_PASSWORD: "REDIS_PASSWORD"
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
