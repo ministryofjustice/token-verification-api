@@ -86,7 +86,6 @@ If we insert a token record for:
     1) "a5b0dd32-2763-4577-bce8-7339c8bd4bd2"
     ```
 
-
 ##### Connecting to a Redis Instance
 
 Tokens are stored in a redis instance in AWS.  Follow [DPS Runbook](https://dsdmoj.atlassian.net/wiki/spaces/NOM/pages/1739325587/DPS+Runbook#Connecting-to-elasticache-to-view-existing-sessions)
