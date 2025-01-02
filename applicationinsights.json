@@ -7,29 +7,73 @@
   },
   "instrumentation": {
     "logging": {
-      "level": "DEBUG"
+      "level": "INFO"
     }
   },
   "selfDiagnostics": {
     "destination": "console"
   },
   "sampling": {
-    "percentage": 100
+    "percentage": 100,
+    "overrides": [
+      {
+        "telemetryType": "dependency",
+        "attributes": [
+          {
+            "key": "db.system",
+            "value": "postgresql",
+            "matchType": "strict"
+          }
+        ],
+        "percentage": 100
+      },
+      {
+        "telemetryType": "dependency",
+        "attributes": [
+          {
+            "key": "server.address",
+            "value": "(sign-in).*",
+            "matchType": "regexp"
+          }
+        ],
+        "percentage": 10
+      },
+      {
+        "telemetryType": "request",
+        "attributes": [
+          {
+            "key": "url.path",
+            "value": "/health.*",
+            "matchType": "regexp"
+          }
+        ],
+        "percentage": 10
+      },
+      {
+        "telemetryType": "request",
+        "attributes": [
+          {
+            "key": "url.path",
+            "value": "/info",
+            "matchType": "strict"
+          }
+        ],
+        "percentage": 10
+      }
+    ]
   },
   "preview": {
-    "sampling": {
-      "overrides": [
-        {
-          "attributes": [
-            {
-              "key": "http.url",
-              "value": "https?://[^/]+/health.*",
-              "matchType": "regexp"
-            }
-          ],
-          "percentage": 10
+    "processors": [
+      {
+        "type": "metric-filter",
+        "exclude": {
+          "matchType": "regexp",
+          "metricNames": [
+            "(cache|executor|disk|http|logback|spring_).*"
+          ]
         }
-      ]
-    }
+      }
+    ]
   }
 }
+
