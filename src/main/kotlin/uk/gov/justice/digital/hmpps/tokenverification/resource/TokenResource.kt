@@ -58,8 +58,7 @@ class TokenResource(private val tokenService: TokenService) {
     @RequestBody
     @Parameter(name = "JWT to check")
     jwt: String?,
-  ): TokenDto =
-    tokenService.verifyToken(jwt ?: bearerToken.substringAfter("Bearer "))
+  ): TokenDto = tokenService.verifyToken(jwt ?: bearerToken.substringAfter("Bearer "))
 
   @Hidden
   @PreAuthorize("hasRole('AUTH_TOKEN_VERIFICATION')")

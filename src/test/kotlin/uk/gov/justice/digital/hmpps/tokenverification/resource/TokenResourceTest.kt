@@ -219,6 +219,5 @@ class TokenResourceTest : IntegrationTest() {
     verifyNoInteractions(tokenRepository)
   }
 
-  private fun String.loadJson(): String =
-    TokenResourceTest::class.java.getResource("$this.json").readText()
+  private fun String.loadJson(): String = TokenResourceTest::class.java.getResource("$this.json").readText()
 }
