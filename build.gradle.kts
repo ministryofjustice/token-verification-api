@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.1.2"
-  kotlin("plugin.spring") version "2.0.21"
-  kotlin("plugin.jpa") version "2.0.21"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "7.0.0"
+  kotlin("plugin.spring") version "2.1.10"
+  kotlin("plugin.jpa") version "2.1.10"
 }
 
 configurations {
@@ -22,7 +22,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.4")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("com.google.guava:guava:33.4.0-jre")

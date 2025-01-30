@@ -46,8 +46,7 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
   private val jwtGrantedAuthoritiesConverter: Converter<Jwt, Collection<GrantedAuthority>> =
     JwtGrantedAuthoritiesConverter()
 
-  override fun convert(jwt: Jwt): AbstractAuthenticationToken? =
-    AuthAwareAuthenticationToken(jwt, extractAuthorities(jwt))
+  override fun convert(jwt: Jwt): AbstractAuthenticationToken? = AuthAwareAuthenticationToken(jwt, extractAuthorities(jwt))
 
   @Suppress("UNCHECKED_CAST", "RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
   private fun extractAuthorities(jwt: Jwt): Collection<GrantedAuthority> {
@@ -62,7 +61,6 @@ class AuthAwareTokenConverter : Converter<Jwt, AbstractAuthenticationToken> {
   }
 }
 
-internal class AuthAwareAuthenticationToken(jwt: Jwt, authorities: Collection<GrantedAuthority>) :
-  JwtAuthenticationToken(jwt, authorities) {
+internal class AuthAwareAuthenticationToken(jwt: Jwt, authorities: Collection<GrantedAuthority>) : JwtAuthenticationToken(jwt, authorities) {
   override fun getPrincipal(): Any = name
 }
