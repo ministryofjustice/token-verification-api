@@ -9,11 +9,6 @@ generic-service:
   env:
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://hmpps-auth.hmpps-auth-preprod.svc.cluster.local/auth/.well-known/jwks.json"
 
-  allowlist:
-    groups:
-      - moj_cloud_platform
-      - digital_staff_and_mojo
-
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
   alertSeverity: hmpps_tech_non_prod
