@@ -21,6 +21,11 @@ generic-service:
     SPRING_DATA_REDIS_SSL_ENABLED: "true"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
 
+  allowlist:
+    groups:
+      - moj_cloud_platform
+      - digital_staff_and_mojo
+
   namespace_secrets:
     token-verification-api:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
