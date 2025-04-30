@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.0.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "8.1.0"
   kotlin("plugin.spring") version "2.1.20"
   kotlin("plugin.jpa") version "2.1.20"
 }
@@ -25,7 +25,7 @@ dependencies {
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-  implementation("com.google.guava:guava:33.4.6-jre")
+  implementation("com.google.guava:guava:33.4.8-jre")
 
   testImplementation("org.springframework.boot:spring-boot-starter-webflux")
   testImplementation("it.ozimov:embedded-redis:0.7.3")
