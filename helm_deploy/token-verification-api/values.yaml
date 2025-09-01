@@ -5,7 +5,7 @@ generic-service:
   productId: DPS017
 
   image:
-    repository: quay.io/hmpps/token-verification-api
+    repository: ghcr.io/ministryofjustice/token-verification-api
     tag: latest
     port: 8080
 
@@ -16,7 +16,6 @@ generic-service:
   env:
     SERVER_PORT: 8080
     JAVA_OPTS: "-Xmx512m"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
     SPRING_PROFILES_ACTIVE: "logstash"
     SPRING_DATA_REDIS_SSL_ENABLED: "true"
     APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
@@ -27,8 +26,8 @@ generic-service:
       - digital_staff_and_mojo
 
   namespace_secrets:
-    token-verification-api:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+    token-verification-api-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
     tva-elasticache-redis:
       SPRING_DATA_REDIS_HOST: "primary_endpoint_address"
       SPRING_DATA_REDIS_PASSWORD: "auth_token"
