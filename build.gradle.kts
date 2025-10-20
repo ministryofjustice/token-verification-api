@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.2"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "9.1.3"
   kotlin("plugin.spring") version "2.2.20"
   kotlin("plugin.jpa") version "2.2.20"
 }
@@ -31,7 +31,7 @@ dependencies {
   testImplementation("it.ozimov:embedded-redis:0.7.3")
   testImplementation("io.jsonwebtoken:jjwt-impl:0.13.0")
   testImplementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:6.0.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
 }
 
 kotlin {
