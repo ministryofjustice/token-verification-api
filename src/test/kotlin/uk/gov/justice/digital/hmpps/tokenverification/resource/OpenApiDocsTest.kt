@@ -1,10 +1,11 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.MediaType.APPLICATION_JSON
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter.ISO_DATE
+import java.time.format.DateTimeFormatter
 
 @ExtendWith(RedisExtension::class)
 class OpenApiDocsTest : IntegrationTest() {
@@ -45,6 +46,8 @@ class OpenApiDocsTest : IntegrationTest() {
       .accept(APPLICATION_JSON)
       .exchange()
       .expectStatus().isOk
-      .expectBody().jsonPath("info.version").isEqualTo(ISO_DATE.format(LocalDate.now()))
+      .expectBody().jsonPath("info.version").value<String> {
+        assertThat(it).startsWith(DateTimeFormatter.ISO_DATE.format(LocalDate.now()))
+      }
   }
 }

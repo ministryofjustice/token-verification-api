@@ -1,17 +1,17 @@
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk-jammy AS builder
+FROM --platform=$BUILDPLATFORM eclipse-temurin:25-jre-jammy AS builder
 
 ARG BUILD_NUMBER
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
-WORKDIR /app
-ADD . .
-RUN ./gradlew --no-daemon assemble
+WORKDIR /builder
+COPY hmpps-template-kotlin-${BUILD_NUMBER}.jar app.jar
+RUN java -Djarmode=tools -jar app.jar extract --layers --destination extracted
 
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:25-jre-jammy
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 ARG BUILD_NUMBER
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 RUN apt-get update && \
     apt-get -y upgrade && \
@@ -24,12 +24,14 @@ RUN addgroup --gid 2000 --system appgroup && \
     adduser --uid 2000 --system appuser --gid 2000
 
 WORKDIR /app
-
-COPY --from=builder --chown=appuser:appgroup /app/build/libs/token-verification-api*.jar /app/app.jar
-COPY --from=builder --chown=appuser:appgroup /app/build/libs/applicationinsights-agent*.jar /app/agent.jar
-COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.json /app
-COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.dev.json /app
+COPY --chown=appuser:appgroup applicationinsights.json ./
+COPY --chown=appuser:appgroup applicationinsights.dev.json ./
+COPY --chown=appuser:appgroup applicationinsights-agent*.jar ./agent.jar
+COPY --from=builder --chown=appuser:appgroup /builder/extracted/dependencies/ ./
+COPY --from=builder --chown=appuser:appgroup /builder/extracted/spring-boot-loader/ ./
+COPY --from=builder --chown=appuser:appgroup /builder/extracted/snapshot-dependencies/ ./
+COPY --from=builder --chown=appuser:appgroup /builder/extracted/application/ ./
 
 USER 2000
 
-ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-XX:+AlwaysActAsServerClassMachine", "-javaagent:agent.jar", "-jar", "app.jar"]
