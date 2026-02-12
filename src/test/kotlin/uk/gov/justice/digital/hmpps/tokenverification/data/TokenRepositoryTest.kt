@@ -2,17 +2,15 @@ package uk.gov.justice.digital.hmpps.tokenverification.data
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.test.context.ActiveProfiles
-import uk.gov.justice.digital.hmpps.tokenverification.resource.RedisExtension
+import uk.gov.justice.digital.hmpps.tokenverification.resource.IntegrationTest
 
-@ExtendWith(RedisExtension::class)
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-class TokenRepositoryTest {
+class TokenRepositoryTest : IntegrationTest() {
 
   @Autowired
   lateinit var tokenRepository: TokenRepository

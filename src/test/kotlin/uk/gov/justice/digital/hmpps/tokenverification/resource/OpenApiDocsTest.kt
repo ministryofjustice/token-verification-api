@@ -2,12 +2,10 @@ package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.http.MediaType.APPLICATION_JSON
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@ExtendWith(RedisExtension::class)
 class OpenApiDocsTest : IntegrationTest() {
 
   @Test

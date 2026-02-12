@@ -1,15 +1,12 @@
-package uk.gov.justice.digital.hmpps.tokenverification.services.health
+package uk.gov.justice.digital.hmpps.tokenverification.health
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import uk.gov.justice.digital.hmpps.tokenverification.resource.IntegrationTest
-import uk.gov.justice.digital.hmpps.tokenverification.resource.RedisExtension
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ISO_DATE
 import java.util.function.Consumer
 
-@ExtendWith(RedisExtension::class)
 class HealthIntTest : IntegrationTest() {
   @Test
   fun `Health page reports ok`() {

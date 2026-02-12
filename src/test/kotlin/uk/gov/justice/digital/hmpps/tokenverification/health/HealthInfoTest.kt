@@ -1,9 +1,9 @@
-package uk.gov.justice.digital.hmpps.tokenverification.services.health
+package uk.gov.justice.digital.hmpps.tokenverification.health
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.boot.info.BuildProperties
-import java.util.Properties
+import java.util.*
 
 class HealthInfoTest {
   @Test
