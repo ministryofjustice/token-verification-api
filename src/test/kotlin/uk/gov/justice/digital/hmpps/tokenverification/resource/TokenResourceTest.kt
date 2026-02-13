@@ -8,7 +8,7 @@ import org.mockito.kotlin.whenever
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
-import java.util.*
+import java.util.Optional
 
 class TokenResourceTest : IntegrationTest() {
   @MockitoBean
