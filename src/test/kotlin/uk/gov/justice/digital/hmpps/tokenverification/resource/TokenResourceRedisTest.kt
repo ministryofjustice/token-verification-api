@@ -1,9 +1,7 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(RedisExtension::class)
 class TokenResourceRedisTest : IntegrationTest() {
   @Test
   fun `workflow for token`() {
@@ -77,7 +75,7 @@ class TokenResourceRedisTest : IntegrationTest() {
       .bodyValue(jwt)
       .exchange()
       .expectStatus().isOk
-      .expectBody().jsonPath("active", found)
+      .expectBody().jsonPath("active").isEqualTo(found)
   }
 
   private fun addToken(authId: String, jwt: String) {

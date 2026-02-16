@@ -1,19 +1,17 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
-import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
 import java.util.Optional
 
-@ExtendWith(RedisExtension::class)
 class TokenResourceTest : IntegrationTest() {
-  @MockBean
+  @MockitoBean
   private lateinit var tokenRepository: TokenRepository
 
   @Test

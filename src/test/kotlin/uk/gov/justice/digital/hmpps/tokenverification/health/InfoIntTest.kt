@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.tokenverification.services.health
+package uk.gov.justice.digital.hmpps.tokenverification.health
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
