@@ -5,6 +5,7 @@ generic-service:
   replicaCount: 1
   ingress:
     host: token-verification-api-stage.prison.service.justice.gov.uk
+    className: default-non-prod
 
   env:
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "https://sign-in-stage.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json"
