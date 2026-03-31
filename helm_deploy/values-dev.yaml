@@ -5,6 +5,7 @@ generic-service:
   replicaCount: 2
   ingress:
     host: token-verification-api-dev.prison.service.justice.gov.uk
+    className: default-non-prod
 
   env:
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: "http://hmpps-auth.hmpps-auth-dev.svc.cluster.local/auth/.well-known/jwks.json"
