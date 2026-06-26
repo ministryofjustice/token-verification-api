@@ -1,7 +1,7 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.3.1"
-  kotlin("plugin.spring") version "2.3.21"
-  kotlin("plugin.jpa") version "2.3.21"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "10.5.3"
+  kotlin("plugin.spring") version "2.4.0"
+  kotlin("plugin.jpa") version "2.4.0"
 }
 
 configurations {
@@ -20,7 +20,9 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
+  // Temporarily pin spring doc at 3.0.2 whilst waiting for 3.0.4 upgrade
+  val springDocVersion = "3.0.2"
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
   constraints {
     implementation("org.webjars:swagger-ui:5.32.2")
   }
