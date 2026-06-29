@@ -84,6 +84,12 @@ class TokenResource(private val tokenService: TokenService) {
     tokenService.revokeTokens(authJwtId.replaceSpaceWithPlus())
   }
 
+  @Hidden
+  @DeleteMapping("self")
+  fun revokeToken(@RequestHeader(HttpHeaders.AUTHORIZATION) bearerToken: String) {
+    tokenService.revokeToken(bearerToken.substringAfter("Bearer "))
+  }
+
   private fun String.replaceSpaceWithPlus() = replace(" ", "+")
 }
 

@@ -5,6 +5,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
+import org.springframework.http.HttpHeaders
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
 import uk.gov.justice.digital.hmpps.tokenverification.data.TokenRepository
@@ -22,6 +23,8 @@ class TokenResourceTest : IntegrationTest() {
       .bodyValue(jwt)
       .exchange()
       .expectStatus().isUnauthorized
+
+    verifyNoInteractions(tokenRepository)
   }
 
   @Test
@@ -60,6 +63,8 @@ class TokenResourceTest : IntegrationTest() {
       .exchange()
       .expectStatus().isBadRequest
       .expectBody().json("verify_token_badrequest_parse_exception".loadJson())
+
+    verifyNoInteractions(tokenRepository)
   }
 
   @Test
@@ -71,6 +76,8 @@ class TokenResourceTest : IntegrationTest() {
       .exchange()
       .expectStatus().isBadRequest
       .expectBody().json("verify_token_badrequest_validation_exception".loadJson())
+
+    verifyNoInteractions(tokenRepository)
   }
 
   @Test
@@ -213,6 +220,37 @@ class TokenResourceTest : IntegrationTest() {
       .headers(setAuthorisation(roles = listOf("ROLE_INCORRECT")))
       .exchange()
       .expectStatus().isForbidden
+
+    verifyNoInteractions(tokenRepository)
+  }
+
+  @Test
+  fun `revoke self token`() {
+    val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+
+    webTestClient.delete().uri("/token/self")
+      .headers { it.set(HttpHeaders.AUTHORIZATION, "Bearer $jwt") }
+      .exchange()
+      .expectStatus().isOk
+
+    verify(tokenRepository).deleteById("jwt id")
+  }
+
+  @Test
+  fun `revoke self token no auth`() {
+    webTestClient.delete().uri("/token/self")
+      .exchange()
+      .expectStatus().isUnauthorized
+
+    verifyNoInteractions(tokenRepository)
+  }
+
+  @Test
+  fun `revoke self token invalid jwt`() {
+    webTestClient.delete().uri("/token/self")
+      .headers { it.set(HttpHeaders.AUTHORIZATION, "Bearer not-a-jwt") }
+      .exchange()
+      .expectStatus().isUnauthorized
 
     verifyNoInteractions(tokenRepository)
   }
