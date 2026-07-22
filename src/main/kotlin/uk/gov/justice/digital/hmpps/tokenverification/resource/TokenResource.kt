@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -82,6 +83,12 @@ class TokenResource(private val tokenService: TokenService) {
   @DeleteMapping
   fun revokeTokens(@RequestParam(value = "authJwtId", required = true) authJwtId: String) {
     tokenService.revokeTokens(authJwtId.replaceSpaceWithPlus())
+  }
+
+  @Hidden
+  @DeleteMapping("self")
+  fun revokeToken(authentication: JwtAuthenticationToken) {
+    tokenService.revokeToken(authentication.token.tokenValue)
   }
 
   private fun String.replaceSpaceWithPlus() = replace(" ", "+")

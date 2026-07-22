@@ -45,6 +45,12 @@ class TokenService(private val tokenRepository: TokenRepository, private val jwt
     tokens.forEach { tokenRepository.delete(it) }
   }
 
+  fun revokeToken(jwt: String) {
+    val (jwtId, _) = validateJwt(jwt)
+    log.info("Revoking token with jwtId of {}", jwtId)
+    tokenRepository.deleteById(jwtId)
+  }
+
   private fun validateJwt(jwt: String): Pair<String, String> {
     val parsedJwt = jwtDecoder.decode(jwt)
 
