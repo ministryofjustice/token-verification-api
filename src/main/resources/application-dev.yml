@@ -6,6 +6,7 @@ spring:
 
 server:
   shutdown: immediate
+  port: 8100
 
 management.endpoint:
   health.cache.time-to-live: 0
