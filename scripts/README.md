@@ -62,5 +62,8 @@ Examples:
 
 ### Notes
 
-- Only real `Token` hash keys (`token:<uuid>`) are shown — Spring Data Redis's secondary index keys (e.g. `token:subject:*`, `token:authJwtId:*`, which are Redis Sets, not Hashes) are filtered out.
+- Keys are discovered via `redis-cli --scan` (cursor-based, non-blocking) rather than `KEYS`, which is O(N) and can block Redis on non-trivial instances.
+- Only real `Token` hashes are shown — candidate keys are filtered by actual Redis type (`TYPE` = `hash`), not by assuming a particular ID format, since `jwtId`/`authJwtId` are arbitrary `String`s in the app rather than enforced UUIDs. This correctly excludes Spring Data Redis's secondary index keys (e.g. `token:subject:*`, `token:authJwtId:*`), which are Redis Sets, not Hashes.
+- Spring Data Redis's internal `token:<id>:phantom` hashes (used to support expiry events) are also explicitly excluded, since they'd otherwise appear as duplicate-looking entries alongside the real `token:<id>` record.
+- If a `Token` hash key's ID portion doesn't look like a UUID, a warning is printed to stderr (e.g. `Warning: token hash key does not look like a UUID: token:some-id`) — this is informational only; the entry is still included in the JSON output.
 - `expiresAt` is computed locally from the current time (`date -u`) plus the TTL returned by Redis — it is not stored in Redis itself, since Redis only tracks TTL as a relative countdown, not an absolute timestamp.
