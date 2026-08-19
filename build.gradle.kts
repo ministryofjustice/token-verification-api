@@ -24,7 +24,7 @@ dependencies {
   val springDocVersion = "3.0.2"
   implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springDocVersion")
   constraints {
-    implementation("org.webjars:swagger-ui:5.32.2")
+    implementation("org.webjars:swagger-ui:5.32.11")
   }
 
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
