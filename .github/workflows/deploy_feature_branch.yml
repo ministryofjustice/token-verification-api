@@ -1,0 +1,63 @@
+name: Deploy feature branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-to-stage:
+        description: Deploy the branch to stage?
+        default: true
+        required: false
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  helm_lint:
+    if: ${{ inputs['deploy-to-stage'] == true }}
+    name: helm lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: stage
+  app_version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.app_version.outputs.version }}
+    steps:
+      - id: app_version
+        name: Application version creators
+        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/build-test-and-deploy/create_app_version@c89a206b6b32888d13f6aec01af0f7694df6b42f # v1.0.19
+  create-artifact:
+    name: Build the artifact for deployment to stage for testing
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/gradle_verify.yml@v2 # WORKFLOW_VERSION
+    needs: app_version
+    with:
+      gradle-command: 'BUILD_NUMBER=${{ needs.app_version.outputs.version }} ./gradlew assemble'
+      upload-build-artifacts: true
+      build-artifact-name: 'build-results'
+      upload-test-artifacts: false
+      java-version: "25"
+  build_image:
+    name: Build docker image
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2
+    needs: create-artifact
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      push: true
+      docker_multiplatform: true
+      tag_latest: false
+      download_build_artifacts: true
+  deploy_stage:
+    if: ${{ !failure() && !cancelled() && inputs['deploy-to-stage'] == true }}
+    name: Deploy to stage
+    needs:
+      - build_image
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: stage
+      app_version: ${{ needs.build_image.outputs.app_version }}
