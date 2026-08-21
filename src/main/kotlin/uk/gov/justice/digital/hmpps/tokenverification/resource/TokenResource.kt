@@ -88,7 +88,8 @@ class TokenResource(private val tokenService: TokenService) {
   @Hidden
   @DeleteMapping("self")
   fun revokeToken(authentication: JwtAuthenticationToken) {
-    tokenService.revokeToken(authentication.token.tokenValue)
+    // pass already validated token to service to be revoked
+    tokenService.revokeToken(authentication.token)
   }
 
   private fun String.replaceSpaceWithPlus() = replace(" ", "+")
