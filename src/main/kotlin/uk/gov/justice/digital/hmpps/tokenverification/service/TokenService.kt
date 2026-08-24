@@ -47,7 +47,7 @@ class TokenService(private val tokenRepository: TokenRepository, private val jwt
   }
 
   fun revokeToken(jwt: Jwt) {
-    val jwtId = jwt.getClaimAsString("jti")
+    val jwtId = jwt.id
     if (jwtId.isNullOrBlank()) {
       log.info("Unable to retrieve jwt id due to jti being null or blank")
       throw ValidationException("Unable to find jwtId from token")
