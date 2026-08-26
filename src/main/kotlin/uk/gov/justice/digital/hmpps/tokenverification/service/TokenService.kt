@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.tokenverification.service
 
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
+import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.tokenverification.data.Token
@@ -43,6 +44,16 @@ class TokenService(private val tokenRepository: TokenRepository, private val jwt
     val tokens = tokenRepository.findByAuthJwtId(authJwtId)
     log.debug("Deleting {} for auth token", tokens.size)
     tokens.forEach { tokenRepository.delete(it) }
+  }
+
+  fun revokeToken(jwt: Jwt) {
+    val jwtId = jwt.id
+    if (jwtId.isNullOrBlank()) {
+      log.info("Unable to retrieve jwt id due to jti being null or blank")
+      throw ValidationException("Unable to find jwtId from token")
+    }
+    log.info("Revoking token with jwtId of {}", jwtId)
+    tokenRepository.deleteById(jwtId)
   }
 
   private fun validateJwt(jwt: String): Pair<String, String> {

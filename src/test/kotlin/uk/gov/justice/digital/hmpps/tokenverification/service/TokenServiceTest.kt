@@ -139,4 +139,22 @@ class TokenServiceTest {
       verifyNoMoreInteractions(tokenRepository)
     }
   }
+
+  @Nested
+  inner class revokeToken {
+    @Test
+    fun `revoke token by jwt`() {
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "jwt id")
+      tokenService.revokeToken(jwtHelper.jwtDecoder().decode(jwt))
+      verify(tokenRepository).deleteById("jwt id")
+    }
+
+    @Test
+    fun `revoke token blank jwtId`() {
+      val jwt = jwtHelper.createJwt(subject = "bob", jwtId = "")
+      assertThatThrownBy { tokenService.revokeToken(jwtHelper.jwtDecoder().decode(jwt)) }
+        .isInstanceOf(ValidationException::class.java)
+        .hasMessage("Unable to find jwtId from token")
+    }
+  }
 }

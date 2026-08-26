@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.tokenverification.resource
 
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpHeaders
 
 class TokenResourceRedisTest : IntegrationTest() {
   @Test
@@ -67,6 +68,24 @@ class TokenResourceRedisTest : IntegrationTest() {
 
     // but other token should still be valid
     verifyToken(otherJwt)
+  }
+
+  @Test
+  fun `revoke self token`() {
+    val jwt = jwtHelper.createJwt(subject = "bob")
+
+    // add and verify token is active
+    addToken("auth_id_self", jwt)
+    verifyToken(jwt)
+
+    // revoke via self endpoint
+    webTestClient.delete().uri("/token/self")
+      .headers { it.set(HttpHeaders.AUTHORIZATION, "Bearer $jwt") }
+      .exchange()
+      .expectStatus().isOk
+
+    // token should now be invalid
+    verifyToken(jwt, false)
   }
 
   private fun verifyToken(jwt: String, found: Boolean = true) {

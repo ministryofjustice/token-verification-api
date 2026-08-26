@@ -4,12 +4,16 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.servers.Server
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.info.BuildProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class OpenApiConfiguration(buildProperties: BuildProperties) {
+class OpenApiConfiguration(
+  buildProperties: BuildProperties,
+  @Value("\${server.port}") private val serverPort: String,
+) {
   private val version: String = buildProperties.version!!
 
   @Bean
@@ -19,7 +23,7 @@ class OpenApiConfiguration(buildProperties: BuildProperties) {
         Server().url("https://token-verification-api.prison.service.justice.gov.uk").description("Prod"),
         Server().url("https://token-verification-api-preprod.prison.service.justice.gov.uk").description("PreProd"),
         Server().url("https://token-verification-api-dev.prison.service.justice.gov.uk").description("Development"),
-        Server().url("http://localhost:8080").description("Local"),
+        Server().url("http://localhost:$serverPort").description("Local"),
       ),
     )
     .info(
