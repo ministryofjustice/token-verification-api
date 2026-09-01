@@ -58,7 +58,7 @@ Examples:
 ```
 
 - `ttlSeconds` — seconds remaining before Redis automatically expires this key (from `TTL <key>`)
-- `expiresAt` — the TTL translated into an explicit ISO 8601 UTC timestamp, for readability
+- `expiresAt` — the TTL translated into an explicit ISO 8601 UTC timestamp, for readability. This is `null` if the key has no expiry set (`ttlSeconds` is `-1`).
 
 ### Notes
 
@@ -67,3 +67,4 @@ Examples:
 - Spring Data Redis's internal `token:<id>:phantom` hashes (used to support expiry events) are also explicitly excluded, since they'd otherwise appear as duplicate-looking entries alongside the real `token:<id>` record.
 - If a `Token` hash key's ID portion doesn't look like a UUID, a warning is printed to stderr (e.g. `Warning: token hash key does not look like a UUID: token:some-id`) — this is informational only; the entry is still included in the JSON output.
 - `expiresAt` is computed locally from the current time (`date -u`) plus the TTL returned by Redis — it is not stored in Redis itself, since Redis only tracks TTL as a relative countdown, not an absolute timestamp.
+- A key can report a TTL of `-1` (no expiry set) or `-2` (key no longer exists, e.g. it expired between the `--scan` and the subsequent `TTL` call). Keys with a TTL of `-2` are skipped entirely. Keys with a TTL of `-1` are still shown, but with `expiresAt: null` rather than a computed timestamp.
