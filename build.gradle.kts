@@ -25,10 +25,10 @@ dependencies {
   implementation("com.google.guava:guava:33.7.1-jre")
 
   testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
-  testImplementation("com.github.codemonstur:embedded-redis:1.4.3") { exclude("org.slf4j", "slf4j-simple") }
+  testImplementation("com.github.codemonstur:embedded-redis:1.4.4") { exclude("org.slf4j", "slf4j-simple") }
   testImplementation("io.jsonwebtoken:jjwt-impl:0.13.0")
   testImplementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
 }
 
 kotlin {
