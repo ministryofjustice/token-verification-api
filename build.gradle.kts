@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.9"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "11.0.10"
   kotlin("plugin.spring") version "2.4.20"
   kotlin("plugin.jpa") version "2.4.20"
 }
@@ -28,7 +28,7 @@ dependencies {
   testImplementation("com.github.codemonstur:embedded-redis:1.4.4") { exclude("org.slf4j", "slf4j-simple") }
   testImplementation("io.jsonwebtoken:jjwt-impl:0.13.0")
   testImplementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:6.3.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:6.4.0")
 }
 
 kotlin {
