@@ -43,6 +43,9 @@ Prefer running the smallest relevant Gradle test task for the change being made 
 `./gradlew test --tests "uk.gov.justice.digital.hmpps.tokenverification.resource.TokenResourceTest"`)
 before falling back to the full `./gradlew build`.
 
+Do not run any ktlint Gradle task, including `ktlintCheck` and `ktlintFormat`; skip ktlint
+validation and formatting entirely.
+
 ## Conventions
 
 - Kotlin code style follows the project's `.editorconfig`; do not reformat unrelated code.
@@ -87,4 +90,5 @@ Prefer `@BeforeAll`/`@AfterAll` over `@BeforeEach`/`@AfterEach` where possible i
 
 ## Linting
 
-Do not run `ktlintCheck` (or any ktlint gradle task) in this repository. Skip ktlint validation entirely.
+Do not run any ktlint Gradle task, including `ktlintCheck` and `ktlintFormat`; skip ktlint
+validation and formatting entirely.
