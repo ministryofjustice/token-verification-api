@@ -11,6 +11,7 @@ OAuth2 access and refresh tokens issued to prisoners/staff for HMPPS services. T
 
 ## Tech stack
 
+- JAVA 25
 - Kotlin on Spring Boot, built with Gradle Kotlin DSL (`build.gradle.kts`, wrapper: `./gradlew`)
 - Spring Data Redis for persistence, Spring Security OAuth2 resource server for auth
 - springdoc-openapi for API docs (Swagger UI)
@@ -42,6 +43,9 @@ Prefer running the smallest relevant Gradle test task for the change being made 
 `./gradlew test --tests "uk.gov.justice.digital.hmpps.tokenverification.resource.TokenResourceTest"`)
 before falling back to the full `./gradlew build`.
 
+Do not run any ktlint Gradle task, including `ktlintCheck` and `ktlintFormat`; skip ktlint
+validation and formatting entirely.
+
 ## Conventions
 
 - Kotlin code style follows the project's `.editorconfig`; do not reformat unrelated code.
@@ -66,3 +70,25 @@ before falling back to the full `./gradlew build`.
 
 - Keep changes focused and update `README.md` when behavior or setup instructions change.
 - Ensure `./gradlew build` passes locally before proposing a PR.
+
+## Dependency injection
+
+Prefer constructor injection over field injection in Spring components, including test classes.
+
+- In production code, declare dependencies as constructor parameters (e.g. `private val fooRepository: FooRepository`) rather than using `@Autowired` on a field.
+- In integration test classes, pass `@Autowired` repositories/beans as primary constructor parameters instead of using `@Autowired` on a `lateinit var` field.
+
+## Tests
+
+Prefer `@BeforeAll`/`@AfterAll` over `@BeforeEach`/`@AfterEach` where possible in nested integration test classes.
+
+- Use `@TestInstance(TestInstance.Lifecycle.PER_CLASS)` on the nested test class so that `@BeforeAll`/`@AfterAll` can be non-static (instance) methods.
+- Build shared fixture data once in `@BeforeAll` and clean it up once in `@AfterAll`, rather than rebuilding it before every test, when the fixture is not mutated in a way that would leak between tests.
+- When copying or adapting an integration test, preserve the full nested test structure, including `Security`, `Validation`, and `HappyPath` scenarios for each endpoint.
+- Place each `@AfterAll` method immediately after the corresponding `@BeforeAll` setup method.
+- OAuth2 propagation tests must verify the exact WireMock header value with `equalTo("Bearer ABCDE")`; do not weaken this assertion to a regex or non-empty-header matcher.
+
+## Linting
+
+Do not run any ktlint Gradle task, including `ktlintCheck` and `ktlintFormat`; skip ktlint
+validation and formatting entirely.
