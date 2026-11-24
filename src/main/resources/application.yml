@@ -18,10 +18,6 @@ spring:
       test:
         - "dev"
 
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
 server:
   port: 8080
   servlet:
